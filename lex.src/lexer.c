@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "tokens.h"
 #include "lexer.h"
+#include "lex.yy.c"
 
 /* Array with tokens such that index = tokenid - 250*/
 char *tokens[] = {
@@ -20,11 +21,11 @@ int main(int argc, char* argv[])
   while (tokenid=yylex())
     {
       /* Token codes start from 250 */ 
-      printf(" %s", tokens[tokenid-250]);
+      printf(" %s\n", tokens[tokenid-250]);
 
       /* Append value */
       if ( (tokenid == IDENTIFIER) || (tokenid == INTEGER) || (tokenid == BOOLEAN) ) 
-	printf("=\"%s\"", yytext);
+	      printf("=\"%s\"\n", yytext);
     }
     printf("\n");
   return 0;

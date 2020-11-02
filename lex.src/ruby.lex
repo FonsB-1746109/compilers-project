@@ -13,62 +13,64 @@ C definitions
   void ADJUST() { col_nr += yyleng; }
 %}
 
+ /* Regular Expressions */
+
+identifier  [a-z]([a-z]|[0-9])*
+real        ("-"|"+")?(([0-9]+"."[0-9]*)|([0-9]*"."[0-9]+))
+integer     [0-9]+
+boolean     ("true"|"false")
+comment     "--".*
+whitespace  (" "|"\t")+
+
 %%
 
-/* Regular Expressions */
-
-identifier      [a-z]([a-z]|[0-9])*
-real            ("-"|"+")?(([0-9]+"."[0-9]*)|([0-9]*"."[0-9]+))
-comment         "--".*
-whitespace      (" "|"\t")+
-
-;                       { return SEMICOLON}
-undef                   { return UNDEF}
-def                     { return DEF}
-"("                     { return LPAREN}
-")"                     { return RPAREN}
-end                     { return END}
-return                  { return RETURN}
+;                       { return SEMICOLON; }
+undef                   { return UNDEF; }
+def                     { return DEF; }
+"("                     { return LPAREN; }
+")"                     { return RPAREN; }
+end                     { return END; }
+return                  { return RETURN; }
 if                      { return IF; }
 then                    { return THEN; }
-elsis                   { return ELSIF; }
+elsif                   { return ELSIF; }
 else                    { return ELSE; }
 unless                  { return UNLESS; }
 while                   { return WHILE; }
 do                      { return DO; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; } //int te vullen
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
-unless                  { return UNLESS; }
+until                   { return UNTIL; }
+case                    { return CASE; }
+"="                     { return ASSIGN; }
+"+="                    { return PLUSASSIGN; }
+"-="                    { return MINUSASSIGN; }
+"*="                    { return MULASSIGN; }
+"/="                    { return DIVASSIGN; }
+"&&="                   { return ANDASSIGN; }
+"||="                   { return ORASSIGN; }
+"+"                     { return PLUS; }
+"-"                     { return MINUS; }
+"*"                     { return MUL; }
+"/"                     { return DIV; }
+">"                     { return GT; }
+">="                    { return GE; }
+"<"                     { return LT; }
+"<="                    { return LE; }
+"=="                    { return EQ; }
+"!="                    { return NE; }
+"&&"                    { return AND; }
+"||"                    { return OR; }
+"!"                     { return NOT; }
 \n                      { line_nr++; col_nr=0; }
 
-{identifier}            { return ID; }
-{real}                  { return REAL; }
-{comment}|{whitespace}  {/* doe niets */}
+{boolean}               { return BOOLEAN; }
+{identifier}            { return IDENTIFIER; }
+ /* {real}                  { return REAL; } */
+{integer}               { return INTEGER; }
+{comment}|{whitespace}  { }
 
 
-/* Errors */
-.      {
+
+.      { /* Errors */
   if (yytext[0] < ' '){ /* non-printable char */
     /*yyerror*/ fprintf(stderr,"illegal character: ^%c",yytext[0] + '@'); 
   }
