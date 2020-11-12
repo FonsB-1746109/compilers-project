@@ -1,5 +1,6 @@
 %{
 #include "lexer.h"
+#include <stdio.h>
 
 void yyerror(const char* str);
 
@@ -8,15 +9,115 @@ void yyerror(const char* str);
 // vul aan met tokendeclaraties
 // vul aan met voorrangdeclaraties
 
+%token
+  SEMICOLON LPAREN RPAREN COMMA
+  IF THEN ELSIF ELSE UNLESS WHILE DO UNTIL CASE WHEN END RETURN
+  ASSIGN PLUSASSIGN MINUSASSIGN MULASSIGN DIVASSIGN ANDASSIGN ORASSIGN
+  PLUS MINUS MUL DIV GT GE LT LE EQ NE
+  AND OR NOT
+  BOOLEAN INTEGER IDENTIFIER
+  UNDEF DEF
+
 %defines
+
 
 %%
 
-// vul aan met producties
+program : compstmt
+;
+
+compstmt : stmt
+  | stmt t
+  | stmt t compstmt
+;
+
+stmt : UNDEF IDENTIFIER
+  | DEF IDENTIFIER LPAREN arglist RPAREN compstmt END
+  | RETURN expr
+  | IF expr then compstmt elsif else END
+  | UNLESS expr then compstmt else END
+  | WHILE expr do compstmt END
+  | UNTIL expr do compstmt END
+  | CASE expr WHEN expr then compstmt when else END
+  | expr
+;
+
+elsif : /* empty */
+  | ELSIF expr then compstmt elsif
+;
+
+when : /* empty */
+  | WHEN expr then compstmt when
+;
+
+else : /* empty */
+  | ELSE compstmt
+;
+
+expr : IDENTIFIER assignop expr
+  | expr binop expr
+  | NOT expr
+  | literal
+  | IDENTIFIER
+  | MINUS expr
+  | IDENTIFIER LPAREN exprs RPAREN
+  | LPAREN expr RPAREN
+;
+
+literal : BOOLEAN
+  | INTEGER
+;
+
+exprs : /* empty */
+  | expr
+  | expr COMMA exprs
+;
+
+arglist : /* empty */
+  | IDENTIFIER
+  | IDENTIFIER COMMA arglist
+;
+
+then : t
+  | THEN
+  | t THEN
+;
+
+do : t
+  | DO
+  | t DO
+;
+
+t : SEMICOLON
+  | "\n"    // HERMAKEN!!
+;
+
+assignop : ASSIGN
+  | PLUSASSIGN
+  | MINUSASSIGN
+  | MULASSIGN
+  | DIVASSIGN
+  | ANDASSIGN
+  | ORASSIGN
+;
+
+binop : PLUS
+  | MINUS
+  | MUL
+  | DIV
+  | GT
+  | GE
+  | LT
+  | LE
+  | EQ
+  | NE
+  | AND
+  | OR
+;
 
 %%
 
 void yyerror (const char *s)
 {
-  // vul aan
+  puts(s); 
 }

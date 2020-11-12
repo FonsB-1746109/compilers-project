@@ -56,7 +56,7 @@ case                    { return CASE; }
 "<"                     { return LT; }
 "<="                    { return LE; }
 "=="                    { return EQ; }
-"!="                    { return NE; }
+"!="                    { returSn NE; }
 "&&"                    { return AND; }
 "||"                    { return OR; }
 "!"                     { return NOT; }
