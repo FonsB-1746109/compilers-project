@@ -1,0 +1,22 @@
+%{
+#include "lexer.h"
+
+void yyerror(const char* str);
+
+%}
+
+// vul aan met tokendeclaraties
+// vul aan met voorrangdeclaraties
+
+%defines
+
+%%
+
+// vul aan met producties
+
+%%
+
+void yyerror (const char *s)
+{
+  // vul aan
+}

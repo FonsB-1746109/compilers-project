@@ -1,0 +1,12 @@
+.rb-bestanden zijn invoerbestanden voor de parser
+.err-bestanden zijn de foutmeldingen (stderr)
+
+Het is gegenereerd met het commando:
+./myruby < X.rb 2> X.err
+
+met X bijvoorbeeld gelijk aan parseme_test1.rb.
+
+Deze bestanden testen opnieuw enkel op de meest verwachte fouten.
+
+Dries Van Dyck.
+Aangepast door Robert Brijder.
