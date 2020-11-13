@@ -1,7 +1,8 @@
 #include <stdio.h>
-#include "tokens.h"
 #include "lexer.h"
 #include "lex.yy.c"
+#include "ruby.tab.h"
+#include "ruby.tab.c"
 
 /* Array with tokens such that index = tokenid - 250*/
 char *tokens[] = {
@@ -17,16 +18,20 @@ int main(int argc, char* argv[])
 {
   int tokenid;
   
-  /* If we de not explicitly bind yyin to a file, stdin is assumed. */
-  while (tokenid=yylex())
-    {
-      /* Token codes start from 250 */ 
-      printf(" %s\n", tokens[tokenid-250]);
+  yyparse();
 
-      /* Append value */
-      if ( (tokenid == IDENTIFIER) || (tokenid == INTEGER) || (tokenid == BOOLEAN) ) 
-	      printf("=\"%s\"\n", yytext);
-    }
-    printf("\n");
+  /* If we de not explicitly bind yyin to a file, stdin is assumed. */
+  // while (tokenid=yylex())
+  //   {
+  //     /* Token codes start from 250 */ 
+  //     printf(" %s\n", tokens[tokenid-250]);
+
+  //     /* Append value */
+  //     if ( (tokenid == IDENTIFIER) || (tokenid == INTEGER) || (tokenid == BOOLEAN) ) 
+	//       printf("=\"%s\"\n", yytext);
+  //   }
+  //   printf("\n");
+
+
   return 0;
 }

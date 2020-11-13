@@ -4,7 +4,7 @@ ruby.lex: lex-file for ruby
 C definitions
 */
 
-#include "tokens.h"
+#include "ruby.tab.h"
 
   /* Keep track of current position of lex for error messages, i.e. 
      the position just *after* the last token read */
@@ -25,6 +25,7 @@ whitespace  (" "|"\t")+
 %%
 
 ;                       { return SEMICOLON; }
+,                       { return COMMA; }
 undef                   { return UNDEF; }
 def                     { return DEF; }
 "("                     { return LPAREN; }
@@ -40,6 +41,7 @@ while                   { return WHILE; }
 do                      { return DO; }
 until                   { return UNTIL; }
 case                    { return CASE; }
+when                    { return WHEN; }
 "="                     { return ASSIGN; }
 "+="                    { return PLUSASSIGN; }
 "-="                    { return MINUSASSIGN; }
@@ -56,11 +58,11 @@ case                    { return CASE; }
 "<"                     { return LT; }
 "<="                    { return LE; }
 "=="                    { return EQ; }
-"!="                    { returSn NE; }
+"!="                    { return NE; }
 "&&"                    { return AND; }
 "||"                    { return OR; }
 "!"                     { return NOT; }
-\n                      { line_nr++; col_nr=0; }
+\n                      { line_nr++; col_nr=0; return NEWLINE; }
 
 {boolean}               { return BOOLEAN; }
 {identifier}            { return IDENTIFIER; }

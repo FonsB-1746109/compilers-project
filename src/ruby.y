@@ -17,9 +17,16 @@ void yyerror(const char* str);
   AND OR NOT
   BOOLEAN INTEGER IDENTIFIER
   UNDEF DEF
+  NEWLINE
 
 %defines
 
+%right ASSIGN PLUSASSIGN MINUSASSIGN MULASSIGN DIVASSIGN ANDASSIGN ORASSIGN
+%right GT GE LT LE EQ NE
+%left AND OR
+%left PLUS MINUS
+%left MUL DIV
+%right UMINUS NOT
 
 %%
 
@@ -43,25 +50,43 @@ stmt : UNDEF IDENTIFIER
 ;
 
 elsif : /* empty */
-  | ELSIF expr then compstmt elsif
+  | elsif ELSIF expr then compstmt
 ;
 
 when : /* empty */
-  | WHEN expr then compstmt when
+  | when WHEN expr then compstmt
 ;
 
 else : /* empty */
   | ELSE compstmt
 ;
 
-expr : IDENTIFIER assignop expr
-  | expr binop expr
+expr : IDENTIFIER ASSIGN expr
+  | IDENTIFIER PLUSASSIGN expr
+  | IDENTIFIER MINUSASSIGN expr
+  | IDENTIFIER MULASSIGN expr
+  | IDENTIFIER DIVASSIGN expr
+  | IDENTIFIER ANDASSIGN expr
+  | IDENTIFIER ORASSIGN expr
+  | expr PLUS expr
+  | expr MINUS expr
+  | expr MUL expr
+  | expr DIV expr
+  | expr GT expr
+  | expr GE expr
+  | expr LT expr
+  | expr LE expr
+  | expr EQ expr
+  | expr NE expr
+  | expr AND expr
+  | expr OR expr
   | NOT expr
   | literal
   | IDENTIFIER
-  | MINUS expr
+  | MINUS expr  %prec UMINUS
   | IDENTIFIER LPAREN exprs RPAREN
   | LPAREN expr RPAREN
+  | error
 ;
 
 literal : BOOLEAN
@@ -70,12 +95,12 @@ literal : BOOLEAN
 
 exprs : /* empty */
   | expr
-  | expr COMMA exprs
+  | exprs COMMA expr
 ;
 
 arglist : /* empty */
   | IDENTIFIER
-  | IDENTIFIER COMMA arglist
+  | arglist COMMA IDENTIFIER
 ;
 
 then : t
@@ -89,31 +114,9 @@ do : t
 ;
 
 t : SEMICOLON
-  | "\n"    // HERMAKEN!!
+  | NEWLINE
 ;
 
-assignop : ASSIGN
-  | PLUSASSIGN
-  | MINUSASSIGN
-  | MULASSIGN
-  | DIVASSIGN
-  | ANDASSIGN
-  | ORASSIGN
-;
-
-binop : PLUS
-  | MINUS
-  | MUL
-  | DIV
-  | GT
-  | GE
-  | LT
-  | LE
-  | EQ
-  | NE
-  | AND
-  | OR
-;
 
 %%
 
