@@ -2,12 +2,19 @@
 #include "lexer.h"
 #include <stdio.h>
 
+#include "absyn.h"
+
 void yyerror(const char* str);
 
+Program tree;
 %}
 
-// vul aan met tokendeclaraties
-// vul aan met voorrangdeclaraties
+%union {
+  char* id;
+
+
+}
+
 
 %token
   SEMICOLON LPAREN RPAREN COMMA
@@ -39,9 +46,13 @@ compstmt : stmt
 ;
 
 stmt : UNDEF IDENTIFIER
+        { $$ = new UndefStmt($2); }
   | DEF IDENTIFIER LPAREN arglist RPAREN compstmt END
+        { $$ = new DefStmt($2, $4, $6); }
   | RETURN expr
+        { $$ = new ReturnStmt($2); }
   | IF expr then compstmt elsif else END
+        { $$ = new IfStmt($2, $4, $5, $6); }
   | UNLESS expr then compstmt else END
   | WHILE expr do compstmt END
   | UNTIL expr do compstmt END

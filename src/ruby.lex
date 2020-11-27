@@ -16,7 +16,6 @@ C definitions
  /* Regular Expressions */
 
 identifier  [a-z]([a-z]|[0-9])*
-real        ("-"|"+")?(([0-9]+"."[0-9]*)|([0-9]*"."[0-9]+))
 integer     [0-9]+
 boolean     ("true"|"false")
 comment     "--".*
@@ -66,7 +65,6 @@ when                    { return WHEN; }
 
 {boolean}               { return BOOLEAN; }
 {identifier}            { return IDENTIFIER; }
- /* {real}                  { return REAL; } */
 {integer}               { return INTEGER; }
 {comment}|{whitespace}  { }
 
