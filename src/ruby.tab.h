@@ -54,56 +54,79 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    SEMICOLON = 258,               /* SEMICOLON  */
-    LPAREN = 259,                  /* LPAREN  */
-    RPAREN = 260,                  /* RPAREN  */
-    COMMA = 261,                   /* COMMA  */
-    IF = 262,                      /* IF  */
-    THEN = 263,                    /* THEN  */
-    ELSIF = 264,                   /* ELSIF  */
-    ELSE = 265,                    /* ELSE  */
-    UNLESS = 266,                  /* UNLESS  */
-    WHILE = 267,                   /* WHILE  */
-    DO = 268,                      /* DO  */
-    UNTIL = 269,                   /* UNTIL  */
-    CASE = 270,                    /* CASE  */
-    WHEN = 271,                    /* WHEN  */
-    END = 272,                     /* END  */
-    RETURN = 273,                  /* RETURN  */
-    ASSIGN = 274,                  /* ASSIGN  */
-    PLUSASSIGN = 275,              /* PLUSASSIGN  */
-    MINUSASSIGN = 276,             /* MINUSASSIGN  */
-    MULASSIGN = 277,               /* MULASSIGN  */
-    DIVASSIGN = 278,               /* DIVASSIGN  */
-    ANDASSIGN = 279,               /* ANDASSIGN  */
-    ORASSIGN = 280,                /* ORASSIGN  */
-    PLUS = 281,                    /* PLUS  */
-    MINUS = 282,                   /* MINUS  */
-    MUL = 283,                     /* MUL  */
-    DIV = 284,                     /* DIV  */
-    GT = 285,                      /* GT  */
-    GE = 286,                      /* GE  */
-    LT = 287,                      /* LT  */
-    LE = 288,                      /* LE  */
-    EQ = 289,                      /* EQ  */
-    NE = 290,                      /* NE  */
-    AND = 291,                     /* AND  */
-    OR = 292,                      /* OR  */
-    NOT = 293,                     /* NOT  */
-    BOOLEAN = 294,                 /* BOOLEAN  */
-    INTEGER = 295,                 /* INTEGER  */
-    IDENTIFIER = 296,              /* IDENTIFIER  */
+    IDENTIFIER = 258,              /* IDENTIFIER  */
+    INTEGER = 259,                 /* INTEGER  */
+    BOOLEAN = 260,                 /* BOOLEAN  */
+    SEMICOLON = 261,               /* SEMICOLON  */
+    LPAREN = 262,                  /* LPAREN  */
+    RPAREN = 263,                  /* RPAREN  */
+    COMMA = 264,                   /* COMMA  */
+    IF = 265,                      /* IF  */
+    THEN = 266,                    /* THEN  */
+    ELSIF = 267,                   /* ELSIF  */
+    ELSE = 268,                    /* ELSE  */
+    UNLESS = 269,                  /* UNLESS  */
+    WHILE = 270,                   /* WHILE  */
+    DO = 271,                      /* DO  */
+    UNTIL = 272,                   /* UNTIL  */
+    CASE = 273,                    /* CASE  */
+    WHEN = 274,                    /* WHEN  */
+    END = 275,                     /* END  */
+    RETURN = 276,                  /* RETURN  */
+    ASSIGN = 277,                  /* ASSIGN  */
+    PLUSASSIGN = 278,              /* PLUSASSIGN  */
+    MINUSASSIGN = 279,             /* MINUSASSIGN  */
+    MULASSIGN = 280,               /* MULASSIGN  */
+    DIVASSIGN = 281,               /* DIVASSIGN  */
+    ANDASSIGN = 282,               /* ANDASSIGN  */
+    ORASSIGN = 283,                /* ORASSIGN  */
+    PLUS = 284,                    /* PLUS  */
+    MINUS = 285,                   /* MINUS  */
+    MUL = 286,                     /* MUL  */
+    DIV = 287,                     /* DIV  */
+    GT = 288,                      /* GT  */
+    GE = 289,                      /* GE  */
+    LT = 290,                      /* LT  */
+    LE = 291,                      /* LE  */
+    EQ = 292,                      /* EQ  */
+    NE = 293,                      /* NE  */
+    AND = 294,                     /* AND  */
+    OR = 295,                      /* OR  */
+    NOT = 296,                     /* NOT  */
     UNDEF = 297,                   /* UNDEF  */
     DEF = 298,                     /* DEF  */
     NEWLINE = 299,                 /* NEWLINE  */
-    UMINUS = 300                   /* UMINUS  */
+    PRINT = 300,                   /* PRINT  */
+    UMINUS = 301                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+union YYSTYPE
+{
+#line 12 "ruby.y"
+
+  char* id;
+  int integer;
+  bool boolean;
+
+  Program program;
+  Compstmt compstmt;
+  Stmt stmt;
+  Elsif elsif;
+  When when;
+  Else else;
+  Expr expr;
+  Exprs exprs;
+  Literal literal;
+  Arglist arglist;
+
+#line 127 "ruby.tab.h"
+
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif

@@ -7,7 +7,7 @@
 /* Array with tokens such that index = tokenid - 250*/
 char *tokens[] = {
 "SEMICOLON", "UNDEF", "DEF", "LPAREN", "RPAREN", "END", "RETURN",
-"INTEGER", "IDENTIFIER", "IF", "THEN", "ELSIF", "ELSE", "UNLESS",
+"PRINT", "INTEGER", "IDENTIFIER", "IF", "THEN", "ELSIF", "ELSE", "UNLESS",
 "WHILE", "DO", "UNTIL", "CASE", "WHEN", "COMMA", "ASSIGN",
 "PLUSASSIGN", "MINUSASSIGN", "MULASSIGN", "DIVASSIGN",
 "ANDASSIGN", "ORASSIGN", "PLUS", "MINUS", "MUL", "DIV", "GT",

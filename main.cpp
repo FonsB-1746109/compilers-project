@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <iostream>
-#include "src/lexer.h"
 #include "src/lex.yy.c"
 #include "src/ruby.tab.h"
 #include "src/ruby.tab.c"

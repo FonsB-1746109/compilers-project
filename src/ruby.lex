@@ -6,6 +6,8 @@ C definitions
 
 #include "ruby.tab.h"
 
+#include <stdlib.h>
+
   /* Keep track of current position of lex for error messages, i.e. 
      the position just *after* the last token read */
   int line_nr = 1;
@@ -41,6 +43,7 @@ do                      { return DO; }
 until                   { return UNTIL; }
 case                    { return CASE; }
 when                    { return WHEN; }
+print                   { return PRINT; }
 "="                     { return ASSIGN; }
 "+="                    { return PLUSASSIGN; }
 "-="                    { return MINUSASSIGN; }
@@ -63,9 +66,24 @@ when                    { return WHEN; }
 "!"                     { return NOT; }
 \n                      { line_nr++; col_nr=0; return NEWLINE; }
 
-{boolean}               { return BOOLEAN; }
-{identifier}            { return IDENTIFIER; }
-{integer}               { return INTEGER; }
+{boolean}               { 
+                          if (strcmp(yytext, "true") == 0)
+                            yylval.boolean = 1;
+                          else
+                            yylval.boolean = 0;
+                          
+                          return BOOLEAN; 
+                        }
+{identifier}            {
+                          char* s = (char*) malloc(yyleng+1);
+                          strcpy(s, yytext);
+                          yylval.id = s;
+                          return IDENTIFIER; 
+                        }
+{integer}               {
+                          yylval.integer = atoi(yytext);
+                          return INTEGER; 
+                        }
 {comment}|{whitespace}  { }
 
 
