@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_RUBY_TAB_H_INCLUDED
-# define YY_YY_RUBY_TAB_H_INCLUDED
+#ifndef YY_YY_Y_TAB_H_INCLUDED
+# define YY_YY_Y_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -101,6 +101,54 @@ extern int yydebug;
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
+/* Token kinds.  */
+#define YYEOF 0
+#define YYerror 256
+#define YYUNDEF 257
+#define IDENTIFIER 258
+#define INTEGER 259
+#define BOOLEAN 260
+#define SEMICOLON 261
+#define LPAREN 262
+#define RPAREN 263
+#define COMMA 264
+#define IF 265
+#define THEN 266
+#define ELSIF 267
+#define ELSE 268
+#define UNLESS 269
+#define WHILE 270
+#define DO 271
+#define UNTIL 272
+#define CASE 273
+#define WHEN 274
+#define END 275
+#define RETURN 276
+#define ASSIGN 277
+#define PLUSASSIGN 278
+#define MINUSASSIGN 279
+#define MULASSIGN 280
+#define DIVASSIGN 281
+#define ANDASSIGN 282
+#define ORASSIGN 283
+#define PLUS 284
+#define MINUS 285
+#define MUL 286
+#define DIV 287
+#define GT 288
+#define GE 289
+#define LT 290
+#define LE 291
+#define EQ 292
+#define NE 293
+#define AND 294
+#define OR 295
+#define NOT 296
+#define UNDEF 297
+#define DEF 298
+#define NEWLINE 299
+#define PRINT 300
+#define UMINUS 301
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -123,7 +171,7 @@ union YYSTYPE
   Literal literal;
   Arglist arglist;
 
-#line 127 "ruby.tab.h"
+#line 175 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -136,4 +184,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_RUBY_TAB_H_INCLUDED  */
+#endif /* !YY_YY_Y_TAB_H_INCLUDED  */

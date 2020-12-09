@@ -69,7 +69,7 @@
 /* First part of user prologue.  */
 #line 1 "ruby.y"
 
-#include "absyn.h"
+#include "absyn.hpp"
 
 #include "lexer.h"
 #include <stdio.h>
@@ -80,7 +80,7 @@ void yyerror(const char* str);
 
 Program tree;
 
-#line 84 "ruby.tab.c"
+#line 84 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -103,7 +103,158 @@ Program tree;
 #  endif
 # endif
 
-#include "ruby.tab.h"
+/* Use api.header.include to #include this header
+   instead of duplicating it here.  */
+#ifndef YY_YY_Y_TAB_H_INCLUDED
+# define YY_YY_Y_TAB_H_INCLUDED
+/* Debug traces.  */
+#ifndef YYDEBUG
+# define YYDEBUG 0
+#endif
+#if YYDEBUG
+extern int yydebug;
+#endif
+
+/* Token kinds.  */
+#ifndef YYTOKENTYPE
+# define YYTOKENTYPE
+  enum yytokentype
+  {
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    IDENTIFIER = 258,              /* IDENTIFIER  */
+    INTEGER = 259,                 /* INTEGER  */
+    BOOLEAN = 260,                 /* BOOLEAN  */
+    SEMICOLON = 261,               /* SEMICOLON  */
+    LPAREN = 262,                  /* LPAREN  */
+    RPAREN = 263,                  /* RPAREN  */
+    COMMA = 264,                   /* COMMA  */
+    IF = 265,                      /* IF  */
+    THEN = 266,                    /* THEN  */
+    ELSIF = 267,                   /* ELSIF  */
+    ELSE = 268,                    /* ELSE  */
+    UNLESS = 269,                  /* UNLESS  */
+    WHILE = 270,                   /* WHILE  */
+    DO = 271,                      /* DO  */
+    UNTIL = 272,                   /* UNTIL  */
+    CASE = 273,                    /* CASE  */
+    WHEN = 274,                    /* WHEN  */
+    END = 275,                     /* END  */
+    RETURN = 276,                  /* RETURN  */
+    ASSIGN = 277,                  /* ASSIGN  */
+    PLUSASSIGN = 278,              /* PLUSASSIGN  */
+    MINUSASSIGN = 279,             /* MINUSASSIGN  */
+    MULASSIGN = 280,               /* MULASSIGN  */
+    DIVASSIGN = 281,               /* DIVASSIGN  */
+    ANDASSIGN = 282,               /* ANDASSIGN  */
+    ORASSIGN = 283,                /* ORASSIGN  */
+    PLUS = 284,                    /* PLUS  */
+    MINUS = 285,                   /* MINUS  */
+    MUL = 286,                     /* MUL  */
+    DIV = 287,                     /* DIV  */
+    GT = 288,                      /* GT  */
+    GE = 289,                      /* GE  */
+    LT = 290,                      /* LT  */
+    LE = 291,                      /* LE  */
+    EQ = 292,                      /* EQ  */
+    NE = 293,                      /* NE  */
+    AND = 294,                     /* AND  */
+    OR = 295,                      /* OR  */
+    NOT = 296,                     /* NOT  */
+    UNDEF = 297,                   /* UNDEF  */
+    DEF = 298,                     /* DEF  */
+    NEWLINE = 299,                 /* NEWLINE  */
+    PRINT = 300,                   /* PRINT  */
+    UMINUS = 301                   /* UMINUS  */
+  };
+  typedef enum yytokentype yytoken_kind_t;
+#endif
+/* Token kinds.  */
+#define YYEOF 0
+#define YYerror 256
+#define YYUNDEF 257
+#define IDENTIFIER 258
+#define INTEGER 259
+#define BOOLEAN 260
+#define SEMICOLON 261
+#define LPAREN 262
+#define RPAREN 263
+#define COMMA 264
+#define IF 265
+#define THEN 266
+#define ELSIF 267
+#define ELSE 268
+#define UNLESS 269
+#define WHILE 270
+#define DO 271
+#define UNTIL 272
+#define CASE 273
+#define WHEN 274
+#define END 275
+#define RETURN 276
+#define ASSIGN 277
+#define PLUSASSIGN 278
+#define MINUSASSIGN 279
+#define MULASSIGN 280
+#define DIVASSIGN 281
+#define ANDASSIGN 282
+#define ORASSIGN 283
+#define PLUS 284
+#define MINUS 285
+#define MUL 286
+#define DIV 287
+#define GT 288
+#define GE 289
+#define LT 290
+#define LE 291
+#define EQ 292
+#define NE 293
+#define AND 294
+#define OR 295
+#define NOT 296
+#define UNDEF 297
+#define DEF 298
+#define NEWLINE 299
+#define PRINT 300
+#define UMINUS 301
+
+/* Value type.  */
+#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
+union YYSTYPE
+{
+#line 14 "ruby.y"
+
+  char* id;
+  int integer;
+  bool boolean;
+
+  Program program;
+  Compstmt compstmt;
+  Stmt stmt;
+  Elsif elsif;
+  When when;
+  Else else;
+  Expr expr;
+  Exprs exprs;
+  Literal literal;
+  Arglist arglist;
+
+#line 245 "y.tab.c"
+
+};
+typedef union YYSTYPE YYSTYPE;
+# define YYSTYPE_IS_TRIVIAL 1
+# define YYSTYPE_IS_DECLARED 1
+#endif
+
+
+extern YYSTYPE yylval;
+
+int yyparse (void);
+
+#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
 /* Symbol kind.  */
 enum yysymbol_kind_t
 {
@@ -1243,329 +1394,329 @@ yyreduce:
   case 2: /* program: compstmt  */
 #line 67 "ruby.y"
         { (yyval.program) = new Program((yyvsp[0].compstmt)); tree = (yyval.program); }
-#line 1247 "ruby.tab.c"
+#line 1398 "y.tab.c"
     break;
 
   case 3: /* compstmt: stmt  */
 #line 71 "ruby.y"
         { (yyval.compstmt) = new Compstmt((yyvsp[0].stmt)); }
-#line 1253 "ruby.tab.c"
+#line 1404 "y.tab.c"
     break;
 
   case 4: /* compstmt: stmt t  */
 #line 73 "ruby.y"
         { (yyval.compstmt) = new Compstmt((yyvsp[-1].stmt)); }
-#line 1259 "ruby.tab.c"
+#line 1410 "y.tab.c"
     break;
 
   case 5: /* compstmt: stmt t compstmt  */
 #line 75 "ruby.y"
         { (yyval.compstmt) = new Compstmt((yyvsp[-2].stmt), (yyvsp[0].compstmt)); }
-#line 1265 "ruby.tab.c"
+#line 1416 "y.tab.c"
     break;
 
   case 6: /* stmt: PRINT LPAREN expr RPAREN  */
 #line 79 "ruby.y"
         { (yyval.stmt) = new PrintStmt((yyvsp[-1].expr)); }
-#line 1271 "ruby.tab.c"
+#line 1422 "y.tab.c"
     break;
 
   case 7: /* stmt: UNDEF IDENTIFIER  */
 #line 81 "ruby.y"
         { (yyval.stmt) = new UndefStmt((yyvsp[0].id)); }
-#line 1277 "ruby.tab.c"
+#line 1428 "y.tab.c"
     break;
 
   case 8: /* stmt: DEF IDENTIFIER LPAREN arglist RPAREN compstmt END  */
 #line 83 "ruby.y"
         { (yyval.stmt) = new DefStmt((yyvsp[-5].id), (yyvsp[-3].arglist), (yyvsp[-1].compstmt)); }
-#line 1283 "ruby.tab.c"
+#line 1434 "y.tab.c"
     break;
 
   case 9: /* stmt: RETURN expr  */
 #line 85 "ruby.y"
         { (yyval.stmt) = new ReturnStmt((yyvsp[0].expr)); }
-#line 1289 "ruby.tab.c"
+#line 1440 "y.tab.c"
     break;
 
   case 10: /* stmt: IF expr then compstmt elsif else END  */
 #line 87 "ruby.y"
         { (yyval.stmt) = new IfStmt((yyvsp[-5].expr), (yyvsp[-3].compstmt), (yyvsp[-2].elsif), (yyvsp[-1].else)); }
-#line 1295 "ruby.tab.c"
+#line 1446 "y.tab.c"
     break;
 
   case 11: /* stmt: UNLESS expr then compstmt else END  */
 #line 89 "ruby.y"
         { (yyval.stmt) = new UnlessStmt((yyvsp[-4].expr), (yyvsp[-2].compstmt), (yyvsp[-1].else)); }
-#line 1301 "ruby.tab.c"
+#line 1452 "y.tab.c"
     break;
 
   case 12: /* stmt: WHILE expr do compstmt END  */
 #line 91 "ruby.y"
         { (yyval.stmt) = new WhileStmt((yyvsp[-3].expr), (yyvsp[-1].compstmt)); }
-#line 1307 "ruby.tab.c"
+#line 1458 "y.tab.c"
     break;
 
   case 13: /* stmt: UNTIL expr do compstmt END  */
 #line 93 "ruby.y"
         { (yyval.stmt) = new UntilStmt((yyvsp[-3].expr), (yyvsp[-1].compstmt)); }
-#line 1313 "ruby.tab.c"
+#line 1464 "y.tab.c"
     break;
 
   case 14: /* stmt: CASE expr WHEN expr then compstmt when else END  */
 #line 95 "ruby.y"
         { (yyval.stmt) = new CaseStmt((yyvsp[-7].expr), (yyvsp[-5].expr), (yyvsp[-3].compstmt), (yyvsp[-2].when), (yyvsp[-1].else)); }
-#line 1319 "ruby.tab.c"
+#line 1470 "y.tab.c"
     break;
 
   case 15: /* stmt: expr  */
 #line 97 "ruby.y"
         { (yyval.stmt) = new ExprStmt((yyvsp[0].expr)); }
-#line 1325 "ruby.tab.c"
+#line 1476 "y.tab.c"
     break;
 
   case 16: /* elsif: %empty  */
 #line 101 "ruby.y"
         { (yyval.elsif) = new Elsif(); }
-#line 1331 "ruby.tab.c"
+#line 1482 "y.tab.c"
     break;
 
   case 17: /* elsif: ELSIF expr then compstmt elsif  */
 #line 103 "ruby.y"
         { (yyval.elsif) = new Elsif((yyvsp[-3].expr), (yyvsp[-1].compstmt), (yyvsp[0].elsif)); }
-#line 1337 "ruby.tab.c"
+#line 1488 "y.tab.c"
     break;
 
   case 18: /* when: %empty  */
 #line 107 "ruby.y"
         { (yyval.when) = new When(); }
-#line 1343 "ruby.tab.c"
+#line 1494 "y.tab.c"
     break;
 
   case 19: /* when: WHEN expr then compstmt when  */
 #line 109 "ruby.y"
         { (yyval.when) = new When((yyvsp[-3].expr), (yyvsp[-1].compstmt), (yyvsp[0].when)); }
-#line 1349 "ruby.tab.c"
+#line 1500 "y.tab.c"
     break;
 
   case 20: /* else: %empty  */
 #line 114 "ruby.y"
         { (yyval.else) = new Else(); }
-#line 1355 "ruby.tab.c"
+#line 1506 "y.tab.c"
     break;
 
   case 21: /* else: ELSE compstmt  */
 #line 116 "ruby.y"
         { (yyval.else) = new Else((yyvsp[0].compstmt)); }
-#line 1361 "ruby.tab.c"
+#line 1512 "y.tab.c"
     break;
 
   case 22: /* expr: IDENTIFIER ASSIGN expr  */
 #line 120 "ruby.y"
         { (yyval.expr) = new AssignOpExpr((yyvsp[-2].id), Assignop::Assign, (yyvsp[0].expr)); }
-#line 1367 "ruby.tab.c"
+#line 1518 "y.tab.c"
     break;
 
   case 23: /* expr: IDENTIFIER PLUSASSIGN expr  */
 #line 122 "ruby.y"
         { (yyval.expr) = new AssignOpExpr((yyvsp[-2].id), Assignop::PlusAssign, (yyvsp[0].expr)); }
-#line 1373 "ruby.tab.c"
+#line 1524 "y.tab.c"
     break;
 
   case 24: /* expr: IDENTIFIER MINUSASSIGN expr  */
 #line 124 "ruby.y"
         { (yyval.expr) = new AssignOpExpr((yyvsp[-2].id), Assignop::MinAssign, (yyvsp[0].expr)); }
-#line 1379 "ruby.tab.c"
+#line 1530 "y.tab.c"
     break;
 
   case 25: /* expr: IDENTIFIER MULASSIGN expr  */
 #line 126 "ruby.y"
         { (yyval.expr) = new AssignOpExpr((yyvsp[-2].id), Assignop::MulAssign, (yyvsp[0].expr)); }
-#line 1385 "ruby.tab.c"
+#line 1536 "y.tab.c"
     break;
 
   case 26: /* expr: IDENTIFIER DIVASSIGN expr  */
 #line 128 "ruby.y"
         { (yyval.expr) = new AssignOpExpr((yyvsp[-2].id), Assignop::DivAssign, (yyvsp[0].expr)); }
-#line 1391 "ruby.tab.c"
+#line 1542 "y.tab.c"
     break;
 
   case 27: /* expr: IDENTIFIER ANDASSIGN expr  */
 #line 130 "ruby.y"
         { (yyval.expr) = new AssignOpExpr((yyvsp[-2].id), Assignop::AndAssign, (yyvsp[0].expr)); }
-#line 1397 "ruby.tab.c"
+#line 1548 "y.tab.c"
     break;
 
   case 28: /* expr: IDENTIFIER ORASSIGN expr  */
 #line 132 "ruby.y"
         { (yyval.expr) = new AssignOpExpr((yyvsp[-2].id), Assignop::OrAssign, (yyvsp[0].expr)); }
-#line 1403 "ruby.tab.c"
+#line 1554 "y.tab.c"
     break;
 
   case 29: /* expr: expr PLUS expr  */
 #line 134 "ruby.y"
         { (yyval.expr) = new BinOpExpr((yyvsp[-2].expr), Binop::Plus, (yyvsp[0].expr)); }
-#line 1409 "ruby.tab.c"
+#line 1560 "y.tab.c"
     break;
 
   case 30: /* expr: expr MINUS expr  */
 #line 136 "ruby.y"
         { (yyval.expr) = new BinOpExpr((yyvsp[-2].expr), Binop::Minus, (yyvsp[0].expr)); }
-#line 1415 "ruby.tab.c"
+#line 1566 "y.tab.c"
     break;
 
   case 31: /* expr: expr MUL expr  */
 #line 138 "ruby.y"
         { (yyval.expr) = new BinOpExpr((yyvsp[-2].expr), Binop::Times, (yyvsp[0].expr)); }
-#line 1421 "ruby.tab.c"
+#line 1572 "y.tab.c"
     break;
 
   case 32: /* expr: expr DIV expr  */
 #line 140 "ruby.y"
         { (yyval.expr) = new BinOpExpr((yyvsp[-2].expr), Binop::Div, (yyvsp[0].expr)); }
-#line 1427 "ruby.tab.c"
+#line 1578 "y.tab.c"
     break;
 
   case 33: /* expr: expr GT expr  */
 #line 142 "ruby.y"
         { (yyval.expr) = new BinOpExpr((yyvsp[-2].expr), Binop::Gt, (yyvsp[0].expr)); }
-#line 1433 "ruby.tab.c"
+#line 1584 "y.tab.c"
     break;
 
   case 34: /* expr: expr GE expr  */
 #line 144 "ruby.y"
         { (yyval.expr) = new BinOpExpr((yyvsp[-2].expr), Binop::Ge, (yyvsp[0].expr)); }
-#line 1439 "ruby.tab.c"
+#line 1590 "y.tab.c"
     break;
 
   case 35: /* expr: expr LT expr  */
 #line 146 "ruby.y"
         { (yyval.expr) = new BinOpExpr((yyvsp[-2].expr), Binop::Lt, (yyvsp[0].expr)); }
-#line 1445 "ruby.tab.c"
+#line 1596 "y.tab.c"
     break;
 
   case 36: /* expr: expr LE expr  */
 #line 148 "ruby.y"
         { (yyval.expr) = new BinOpExpr((yyvsp[-2].expr), Binop::Le, (yyvsp[0].expr)); }
-#line 1451 "ruby.tab.c"
+#line 1602 "y.tab.c"
     break;
 
   case 37: /* expr: expr EQ expr  */
 #line 150 "ruby.y"
         { (yyval.expr) = new BinOpExpr((yyvsp[-2].expr), Binop::Eq, (yyvsp[0].expr)); }
-#line 1457 "ruby.tab.c"
+#line 1608 "y.tab.c"
     break;
 
   case 38: /* expr: expr NE expr  */
 #line 152 "ruby.y"
         { (yyval.expr) = new BinOpExpr((yyvsp[-2].expr), Binop::Ne, (yyvsp[0].expr)); }
-#line 1463 "ruby.tab.c"
+#line 1614 "y.tab.c"
     break;
 
   case 39: /* expr: expr AND expr  */
 #line 154 "ruby.y"
         { (yyval.expr) = new BinOpExpr((yyvsp[-2].expr), Binop::And, (yyvsp[0].expr)); }
-#line 1469 "ruby.tab.c"
+#line 1620 "y.tab.c"
     break;
 
   case 40: /* expr: expr OR expr  */
 #line 156 "ruby.y"
         { (yyval.expr) = new BinOpExpr((yyvsp[-2].expr), Binop::Or, (yyvsp[0].expr)); }
-#line 1475 "ruby.tab.c"
+#line 1626 "y.tab.c"
     break;
 
   case 41: /* expr: NOT expr  */
 #line 158 "ruby.y"
         { (yyval.expr) = new NotExpr((yyvsp[0].expr)); }
-#line 1481 "ruby.tab.c"
+#line 1632 "y.tab.c"
     break;
 
   case 42: /* expr: literal  */
 #line 160 "ruby.y"
         { (yyval.expr) = new LitExpr((yyvsp[0].literal)); }
-#line 1487 "ruby.tab.c"
+#line 1638 "y.tab.c"
     break;
 
   case 43: /* expr: IDENTIFIER  */
 #line 162 "ruby.y"
         { (yyval.expr) = new IdExpr((yyvsp[0].id)); }
-#line 1493 "ruby.tab.c"
+#line 1644 "y.tab.c"
     break;
 
   case 44: /* expr: MINUS expr  */
 #line 164 "ruby.y"
         { (yyval.expr) = new MinExpr((yyvsp[0].expr)); }
-#line 1499 "ruby.tab.c"
+#line 1650 "y.tab.c"
     break;
 
   case 45: /* expr: IDENTIFIER LPAREN exprs RPAREN  */
 #line 166 "ruby.y"
         { (yyval.expr) = new FunctionExpr((yyvsp[-3].id), (yyvsp[-1].exprs)); }
-#line 1505 "ruby.tab.c"
+#line 1656 "y.tab.c"
     break;
 
   case 46: /* expr: LPAREN expr RPAREN  */
 #line 168 "ruby.y"
         { (yyval.expr) = (yyvsp[-1].expr); }
-#line 1511 "ruby.tab.c"
+#line 1662 "y.tab.c"
     break;
 
   case 47: /* expr: error  */
 #line 170 "ruby.y"
         { (yyval.expr) = ErrorExpr(); }
-#line 1517 "ruby.tab.c"
+#line 1668 "y.tab.c"
     break;
 
   case 48: /* literal: BOOLEAN  */
 #line 174 "ruby.y"
         { (yyval.literal) = new Literal((yyvsp[0].boolean))}
-#line 1523 "ruby.tab.c"
+#line 1674 "y.tab.c"
     break;
 
   case 49: /* literal: INTEGER  */
 #line 176 "ruby.y"
         { (yyval.literal) = new Literal((yyvsp[0].integer))}
-#line 1529 "ruby.tab.c"
+#line 1680 "y.tab.c"
     break;
 
   case 50: /* exprs: %empty  */
 #line 180 "ruby.y"
         { (yyval.exprs) = new LastExprs(); }
-#line 1535 "ruby.tab.c"
+#line 1686 "y.tab.c"
     break;
 
   case 51: /* exprs: expr  */
 #line 182 "ruby.y"
         { (yyval.exprs) = new LastExprs((yyvsp[0].expr)); }
-#line 1541 "ruby.tab.c"
+#line 1692 "y.tab.c"
     break;
 
   case 52: /* exprs: exprs COMMA expr  */
 #line 184 "ruby.y"
         { (yyval.exprs) = new PairExprs((yyvsp[-2].exprs), (yyvsp[0].expr))}
-#line 1547 "ruby.tab.c"
+#line 1698 "y.tab.c"
     break;
 
   case 53: /* arglist: %empty  */
 #line 188 "ruby.y"
         { (yyval.arglist) = new LastArgList(); }
-#line 1553 "ruby.tab.c"
+#line 1704 "y.tab.c"
     break;
 
   case 54: /* arglist: IDENTIFIER  */
 #line 190 "ruby.y"
         { (yyval.arglist) = new LastArgList((yyvsp[0].id)); }
-#line 1559 "ruby.tab.c"
+#line 1710 "y.tab.c"
     break;
 
   case 55: /* arglist: arglist COMMA IDENTIFIER  */
 #line 192 "ruby.y"
         { (yyval.arglist) = new PairArgList((yyvsp[-2].arglist), (yyvsp[0].id)); }
-#line 1565 "ruby.tab.c"
+#line 1716 "y.tab.c"
     break;
 
 
-#line 1569 "ruby.tab.c"
+#line 1720 "y.tab.c"
 
       default: break;
     }

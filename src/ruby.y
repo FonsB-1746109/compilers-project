@@ -1,8 +1,10 @@
 %{
+#include "absyn.h"
+
 #include "lexer.h"
 #include <stdio.h>
 
-#include "absyn.h"
+
 
 void yyerror(const char* str);
 
@@ -69,7 +71,7 @@ compstmt : stmt
         { $$ = new Compstmt($1); }
   | stmt t
         { $$ = new Compstmt($1); }
-  | stmt t compstmt
+  | stmt t compstmt 
         { $$ = new Compstmt($1, $3); }
 ;
 
@@ -97,14 +99,14 @@ stmt : PRINT LPAREN expr RPAREN
 
 elsif : /* empty */
         { $$ = new Elsif(); }
-  | elsif ELSIF expr then compstmt
-        { $$ = new Elsif($1, $3, $5); }
+  | ELSIF expr then compstmt elsif 
+        { $$ = new Elsif($2, $4, $5); }
 ;
 
 when : /* empty */
         { $$ = new When(); }
-  | when WHEN expr then compstmt
-        { $$ = new When($1, $3, $5); }
+  | WHEN expr then compstmt when 
+        { $$ = new When($2, $4, $5); }
 
 ;
 

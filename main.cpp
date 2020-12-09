@@ -19,5 +19,7 @@ int main(int argc, char* argv[])
   // Parse through the input:
   yyparse();
 
+  tree->print();
+
   return 0;
 }
