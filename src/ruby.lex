@@ -3,7 +3,7 @@
 ruby.lex: lex-file for ruby
 C definitions
 */
-
+#include "absyn.h"
 #include "ruby.tab.h"
 
 #include <stdlib.h>

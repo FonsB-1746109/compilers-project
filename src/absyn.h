@@ -8,16 +8,43 @@
 
 using namespace std;
 
-
 /* Assignment operations */
-typedef enum {Assign, PlusAssign, MinAssign, MulAssign, DivAssign, AndAssign, OrAssign} Assignop;
+typedef enum
+{
+    Assign,
+    PlusAssign,
+    MinAssign,
+    MulAssign,
+    DivAssign,
+    AndAssign,
+    OrAssign
+} Assignop;
 
 /* Binairy operations */
-typedef enum {Plus, Minus, Times, Div, Gt, Ge, Lt, Le, Eq, Ne, And, Or} Binop;
+typedef enum
+{
+    Plus,
+    Minus,
+    Times,
+    Div,
+    Gt,
+    Ge,
+    Lt,
+    Le,
+    Eq,
+    Ne,
+    And,
+    Or
+} Binop;
 
 /* Possible types */
-typedef enum {Boolean, Integer, Function, ERROR} Types;
-
+typedef enum
+{
+    Boolean,
+    Integer,
+    Function,
+    ERROR
+} Types;
 
 /* Struct for returning multiple types */
 struct ReturnValue
@@ -29,7 +56,7 @@ struct ReturnValue
     ReturnValue(); // for init purpose
     ReturnValue(int v);
     ReturnValue(bool v);
-    
+
     Types getType();
     int getInt();
     bool getBool();
@@ -37,27 +64,26 @@ struct ReturnValue
     bool equals(ReturnValue rv);
 };
 
-
 struct DefStmt; // forward declaration
 struct Table
-{   
+{
     bool hasBackup;
     Table *backupTable;
     DefStmt *parentFunction;
 
-    map<string, int>* tableMapInt;
-    map<string, bool>* tableMapBool;
-    map<string, DefStmt>* tableMapFunction;
+    map<string, int> *tableMapInt;
+    map<string, bool> *tableMapBool;
+    map<string, DefStmt> *tableMapFunction;
 
-    map<string, Types>* tableMapTypes;
+    map<string, Types> *tableMapTypes;
 
     Table();
-    
+
     /* NOT copy constructor, but "backup" table add
         If value isn't in this table, check backup table  
     */
-    Table(Table *t, DefStmt *parent); 
-    
+    Table(Table *t, DefStmt *parent);
+
     // Update for integers
     void update(string i, int v);
 
@@ -79,63 +105,64 @@ private:
     void initTableVectors();
 };
 
-
 /* Struct pointer declarations */
-struct Stmt_ 
+struct Stmt_
 {
-    virtual void print() {};
+    virtual void print(){};
 
-    virtual void interp(Table *t) {};
-    virtual ~Stmt_() {};
+    virtual void interp(Table *t){};
+    virtual ~Stmt_(){};
 };
 
-struct Expr_ 
+struct Expr_
 {
-    virtual void print() {};
+    virtual void print(){};
 
     virtual ReturnValue interp(Table *t) { return ReturnValue(); };
-    virtual ~Expr_() {};
+    virtual ~Expr_(){};
 };
 
-struct Exprs_ 
+struct Exprs_
 {
-    virtual void print() {};
+    virtual void print(){};
 
     virtual int getLength() { return 0; }
     virtual vector<ReturnValue> interp(Table *t) { return std::vector<ReturnValue>(); };
-    virtual ~Exprs_() {};
+    virtual ~Exprs_(){};
 };
 
 struct ArgList_
 {
-    virtual void print() {};
+    virtual void print(){};
 
     virtual int getLength() { return 0; }
     virtual vector<string> interp(Table *t) { return std::vector<string>(); };
-    virtual ~ArgList_() {};
+    virtual ~ArgList_(){};
 };
 
 /* forward decl types */
-struct CompStmt_; typedef CompStmt_* CompStmt;
+struct CompStmt_;
+typedef CompStmt_ *CompStmt;
 
 /* Struct typedefs */
-typedef Stmt_* Stmt;
-typedef Expr_* Expr;
-typedef Exprs_* Exprs;
-typedef ArgList_* ArgList;
+typedef Stmt_ *Stmt;
+typedef Expr_ *Expr;
+typedef Exprs_ *Exprs;
+typedef ArgList_ *ArgList;
 
 struct Program_
 {
     CompStmt compStmt;
 
+    Program_() {};
     Program_(CompStmt comp);
 
     void print();
     void interp(Table *t);
 
-    ~Program_() {};
+    ~Program_(){};
 };
-typedef Program_* Program;
+typedef Program_ *Program;
 
 struct CompStmt_
 {
@@ -149,9 +176,8 @@ struct CompStmt_
     void print();
     void interp(Table *t);
 
-    ~CompStmt_() {};
+    ~CompStmt_(){};
 };
-
 
 /* Statement structs */
 
@@ -162,7 +188,7 @@ struct PrintStmt : public Stmt_
     PrintStmt(Expr e);
 
     void print();
-    void interp(Table* t);
+    void interp(Table *t);
 
     ~PrintStmt(){};
 };
@@ -171,16 +197,16 @@ struct UndefStmt : public Stmt_
 {
     string identifier;
 
-    UndefStmt(char* id);
-    
+    UndefStmt(char *id);
+
     void print();
-    void interp(Table* t);
+    void interp(Table *t);
 
     ~UndefStmt(){};
 };
 
 struct DefStmt : public Stmt_
-{   
+{
     string identifier;
     ArgList argList;
     CompStmt compStmt;
@@ -188,13 +214,13 @@ struct DefStmt : public Stmt_
     ReturnValue returnVal;
 
     // local table == glob + all locals
-    Table* localTable;
-    Table* globalTable;
+    Table *localTable;
+    Table *globalTable;
 
-    DefStmt(char* id, ArgList argl, CompStmt comps);
+    DefStmt(char *id, ArgList argl, CompStmt comps);
 
     void print();
-    void interp(Table* t);
+    void interp(Table *t);
     ReturnValue run(Exprs exprs);
     void addReturnValue(ReturnValue rv);
 
@@ -215,7 +241,7 @@ struct ReturnStmt : public Stmt_
 
 /* If statement structs */
 struct Elsif_;
-typedef Elsif_* Elsif;
+typedef Elsif_ *Elsif;
 struct Elsif_
 {
     bool isEmpty;
@@ -228,8 +254,8 @@ struct Elsif_
 
     void print();
     bool interp(Table *t);
-    
-    ~Elsif_() {};
+
+    ~Elsif_(){};
 };
 
 struct Else_
@@ -239,13 +265,13 @@ struct Else_
 
     Else_();
     Else_(CompStmt comp);
-    
+
     void print();
     void interp(Table *t);
-    
-    ~Else_() {};
+
+    ~Else_(){};
 };
-typedef Else_* Else;
+typedef Else_ *Else;
 
 struct IfStmt : public Stmt_
 {
@@ -254,13 +280,13 @@ struct IfStmt : public Stmt_
     Elsif elsif;
     Else els;
 
-    IfStmt() {};
+    IfStmt(){};
     IfStmt(Expr e, CompStmt comp, Elsif eif, Else el);
 
     void print();
     void interp(Table *t);
 
-    ~IfStmt() {};
+    ~IfStmt(){};
 };
 
 struct UnlessStmt : public Stmt_
@@ -269,15 +295,14 @@ struct UnlessStmt : public Stmt_
     CompStmt compStmt;
     Else els;
 
-    UnlessStmt() {};
+    UnlessStmt(){};
     UnlessStmt(Expr e, CompStmt comp, Else el);
 
     void print();
-    void interp(Table* t);
+    void interp(Table *t);
 
     ~UnlessStmt(){};
 };
-
 
 struct WhileStmt : public Stmt_
 {
@@ -287,7 +312,7 @@ struct WhileStmt : public Stmt_
     WhileStmt(Expr e, CompStmt comp);
 
     void print();
-    void interp(Table* t);
+    void interp(Table *t);
 
     ~WhileStmt(){};
 };
@@ -300,13 +325,13 @@ struct UntilStmt : public Stmt_
     UntilStmt(Expr e, CompStmt comp);
 
     void print();
-    void interp(Table* t);
+    void interp(Table *t);
 
     ~UntilStmt(){};
 };
 
 struct When_;
-typedef When_* When;
+typedef When_ *When;
 struct When_
 {
     bool isEmpty;
@@ -335,7 +360,7 @@ struct CaseStmt : public Stmt_
     CaseStmt(Expr ce, Expr we, CompStmt comp, When w, Else el);
 
     void print();
-    void interp(Table* t);
+    void interp(Table *t);
 
     ~CaseStmt(){};
 };
@@ -347,11 +372,10 @@ struct ExprStmt : public Stmt_
     ExprStmt(Expr e);
 
     void print();
-    void interp(Table* t);
+    void interp(Table *t);
 
     ~ExprStmt(){};
 };
-
 
 /* Expression Structs */
 
@@ -361,10 +385,10 @@ struct AssignOpExpr : public Expr_
     Assignop assignop;
     Expr expr;
 
-    AssignOpExpr(char* id, Assignop assop, Expr e);
+    AssignOpExpr(char *id, Assignop assop, Expr e);
 
     void print();
-    ReturnValue interp(Table* t);
+    ReturnValue interp(Table *t);
 
     ~AssignOpExpr(){};
 };
@@ -377,7 +401,7 @@ struct BinOpExpr : public Expr_
     BinOpExpr(Expr eL, Binop bop, Expr eR);
 
     void print();
-    ReturnValue interp(Table* t);
+    ReturnValue interp(Table *t);
 
     ~BinOpExpr(){};
 };
@@ -389,7 +413,7 @@ struct NotExpr : public Expr_
     NotExpr(Expr e);
 
     void print();
-    ReturnValue interp(Table* t);
+    ReturnValue interp(Table *t);
 
     ~NotExpr(){};
 };
@@ -399,16 +423,16 @@ struct Literal_
     bool isInt;
     int intValue;
     bool boolValue;
-    
+
     Literal_(int v);
     Literal_(bool v);
 
     void print();
-    ReturnValue interp(Table* t);
+    ReturnValue interp(Table *t);
 
     ~Literal_(){};
 };
-typedef Literal_* Literal;
+typedef Literal_ *Literal;
 
 struct LitExpr : public Expr_
 {
@@ -417,7 +441,7 @@ struct LitExpr : public Expr_
     LitExpr(Literal l);
 
     void print();
-    ReturnValue interp(Table* t);
+    ReturnValue interp(Table *t);
 
     ~LitExpr(){};
 };
@@ -426,10 +450,10 @@ struct IdExpr : public Expr_
 {
     string identifier;
 
-    IdExpr(char* id);
+    IdExpr(char *id);
 
     void print();
-    ReturnValue interp(Table* t);
+    ReturnValue interp(Table *t);
 
     ~IdExpr(){};
 };
@@ -441,7 +465,7 @@ struct MinExpr : public Expr_
     MinExpr(Expr e);
 
     void print();
-    ReturnValue interp(Table* t);
+    ReturnValue interp(Table *t);
 
     ~MinExpr(){};
 };
@@ -451,10 +475,10 @@ struct FunctionExpr : public Expr_
     string identifier;
     Exprs exprs;
 
-    FunctionExpr(char* id, Exprs e);
+    FunctionExpr(char *id, Exprs e);
 
     void print();
-    ReturnValue interp(Table* t);
+    ReturnValue interp(Table *t);
 
     ~FunctionExpr(){};
 };
@@ -464,11 +488,9 @@ struct ErrorExpr : public Expr_
     ErrorExpr();
 
     void print();
-    ReturnValue interp(Table* t);
+    ReturnValue interp(Table *t);
 
     ~ErrorExpr(){};
 };
 
-
-
-#endif 
+#endif

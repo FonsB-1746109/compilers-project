@@ -3,12 +3,12 @@
 
 #include "lexer.h"
 #include <stdio.h>
-
-
+#include <stdbool.h> 
 
 void yyerror(const char* str);
 
-Program tree;
+Program* tree;
+
 %}
 
 %union {
@@ -17,15 +17,15 @@ Program tree;
   bool boolean;
 
   Program program;
-  Compstmt compstmt;
+  CompStmt compstmt;
   Stmt stmt;
   Elsif elsif;
   When when;
-  Else else;
+  Else els;
   Expr expr;
   Exprs exprs;
   Literal literal;
-  Arglist arglist;
+  ArgList arglist;
 }
 
 %token <id> IDENTIFIER
@@ -55,7 +55,7 @@ Program tree;
 %type <stmt> stmt
 %type <elsif> elsif
 %type <when> when
-%type <else> else
+%type <else> els
 %type <expr> expr
 %type <exprs> exprs
 %type <literal> literal
@@ -63,57 +63,40 @@ Program tree;
 
 %%
 
-program : compstmt
-        { $$ = new Program($1); tree = $$; }
+t : SEMICOLON
+  | NEWLINE
 ;
 
-compstmt : stmt
-        { $$ = new Compstmt($1); }
-  | stmt t
-        { $$ = new Compstmt($1); }
-  | stmt t compstmt 
-        { $$ = new Compstmt($1, $3); }
+do : t
+  | DO
+  | t DO
 ;
 
-stmt : PRINT LPAREN expr RPAREN
-        { $$ = new PrintStmt($3); }
-  | UNDEF IDENTIFIER
-        { $$ = new UndefStmt($2); }
-  | DEF IDENTIFIER LPAREN arglist RPAREN compstmt END
-        { $$ = new DefStmt($2, $4, $6); }
-  | RETURN expr
-        { $$ = new ReturnStmt($2); }
-  | IF expr then compstmt elsif else END
-        { $$ = new IfStmt($2, $4, $5, $6); }
-  | UNLESS expr then compstmt else END
-        { $$ = new UnlessStmt($2, $4, $5); }
-  | WHILE expr do compstmt END
-        { $$ = new WhileStmt($2, $4); }
-  | UNTIL expr do compstmt END
-        { $$ = new UntilStmt($2, $4); }
-  | CASE expr WHEN expr then compstmt when else END
-        { $$ = new CaseStmt($2, $4, $6, $7, $8); }
+then : t
+  | THEN
+  | t THEN
+;
+
+arglist : /* empty */
+        { $$ = new LastArgList(); }
+  | IDENTIFIER
+        { $$ = new LastArgList($1); }
+  | arglist COMMA IDENTIFIER
+        { $$ = new PairArgList($1, $3); }
+;
+
+exprs : /* empty */
+        { $$ = new LastExprs(); }
   | expr
-        { $$ = new ExprStmt($1); }
+        { $$ = new LastExprs($1); }
+  | exprs COMMA expr
+        { $$ = new PairExprs($1, $3)}
 ;
 
-elsif : /* empty */
-        { $$ = new Elsif(); }
-  | ELSIF expr then compstmt elsif 
-        { $$ = new Elsif($2, $4, $5); }
-;
-
-when : /* empty */
-        { $$ = new When(); }
-  | WHEN expr then compstmt when 
-        { $$ = new When($2, $4, $5); }
-
-;
-
-else : /* empty */
-        { $$ = new Else(); }
-  | ELSE compstmt
-        { $$ = new Else($2); }
+literal : BOOLEAN
+        { $$ = new Literal($1)}
+  | INTEGER
+        { $$ = new Literal($1)}
 ;
 
 expr : IDENTIFIER ASSIGN expr
@@ -170,42 +153,57 @@ expr : IDENTIFIER ASSIGN expr
         { $$ = ErrorExpr(); }
 ;
 
-literal : BOOLEAN
-        { $$ = new Literal($1)}
-  | INTEGER
-        { $$ = new Literal($1)}
+els : /* empty */
+        { $$ = new Else(); }
+  | ELSE compstmt
+        { $$ = new Else($2); }
 ;
 
-exprs : /* empty */
-        { $$ = new LastExprs(); }
+when : /* empty */
+        { $$ = new When(); }
+  | WHEN expr then compstmt when 
+        { $$ = new When($2, $4, $5); }
+;
+
+elsif : /* empty */
+        { $$ = new Elsif(); }
+  | ELSIF expr then compstmt elsif 
+        { $$ = new Elsif($2, $4, $5); }
+;
+
+stmt : PRINT LPAREN expr RPAREN
+        { $$ = new PrintStmt($3); }
+  | UNDEF IDENTIFIER
+        { $$ = new UndefStmt($2); }
+  | DEF IDENTIFIER LPAREN arglist RPAREN compstmt END
+        { $$ = new DefStmt($2, $4, $6); }
+  | RETURN expr
+        { $$ = new ReturnStmt($2); }
+  | IF expr then compstmt elsif els END
+        { $$ = new IfStmt($2, $4, $5, $6); }
+  | UNLESS expr then compstmt els END
+        { $$ = new UnlessStmt($2, $4, $5); }
+  | WHILE expr do compstmt END
+        { $$ = new WhileStmt($2, $4); }
+  | UNTIL expr do compstmt END
+        { $$ = new UntilStmt($2, $4); }
+  | CASE expr WHEN expr then compstmt when els END
+        { $$ = new CaseStmt($2, $4, $6, $7, $8); }
   | expr
-        { $$ = new LastExprs($1); }
-  | exprs COMMA expr
-        { $$ = new PairExprs($1, $3)}
+        { $$ = new ExprStmt($1); }
 ;
 
-arglist : /* empty */
-        { $$ = new LastArgList(); }
-  | IDENTIFIER
-        { $$ = new LastArgList($1); }
-  | arglist COMMA IDENTIFIER
-        { $$ = new PairArgList($1, $3); }
+compstmt : stmt
+        { $$ = new CompStmt($1); }
+  | stmt t
+        { $$ = new CompStmt($1); }
+  | stmt t compstmt 
+        { $$ = new CompStmt($1, $3); }
 ;
 
-then : t
-  | THEN
-  | t THEN
+program : compstmt
+        { $$ = new Program($1); tree = $$; }
 ;
-
-do : t
-  | DO
-  | t DO
-;
-
-t : SEMICOLON
-  | NEWLINE
-;
-
 
 %%
 

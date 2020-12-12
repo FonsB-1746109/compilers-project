@@ -113,15 +113,15 @@ union YYSTYPE
   bool boolean;
 
   Program program;
-  Compstmt compstmt;
+  CompStmt compstmt;
   Stmt stmt;
   Elsif elsif;
   When when;
-  Else else;
+  Else els;
   Expr expr;
   Exprs exprs;
   Literal literal;
-  Arglist arglist;
+  ArgList arglist;
 
 #line 127 "ruby.tab.h"
 
