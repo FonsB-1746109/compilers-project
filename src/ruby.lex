@@ -19,8 +19,8 @@ C definitions
 
 identifier  [a-z]([a-z]|[0-9])*
 integer     [0-9]+
-boolean     ("true"|"false")
-comment     "--".*
+boolean     (true|false)
+comment     ("--"|"#").*
 whitespace  (" "|"\t")+
 
 %%

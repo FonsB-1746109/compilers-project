@@ -35,7 +35,7 @@ int ReturnValue::getInt()
 
 bool ReturnValue::getBool()
 {
-    if (type != Types::Integer){
+    if (type != Types::Boolean){
         cout << "[ ReturnValue::getBool() ] Return value is not a bool..." << endl;
         exit(-1);
     }
@@ -80,7 +80,7 @@ void Table::initTableVectors()
 {
     tableMapInt = new map<string, int>; 
     tableMapBool = new map<string, bool>; 
-    tableMapFunction = new map<string, DefStmt>; 
+    tableMapFunction = new map<string, DefStmt*>; 
 
     tableMapTypes = new map<string, Types>; 
 }
@@ -102,7 +102,10 @@ void Table::update(string i, int v)
 };
 
 void Table::update(string i, bool v) 
-{
+{   
+    //TEMP
+    cout << "Bool insert..." << endl;
+
     auto it = tableMapTypes->find(i);
     if (it != tableMapTypes->end()){
         if (it->second == Types::Boolean)
@@ -118,8 +121,11 @@ void Table::update(string i, bool v)
         
 };
 
-void Table::update(string i, DefStmt v)
+void Table::update(string i, DefStmt *v)
 {
+    //TEMP
+    cout << "Function insert..." << endl;
+
     auto it = tableMapTypes->find(i);
     if (it != tableMapTypes->end()){
         if (it->second == Types::Function){
@@ -130,7 +136,8 @@ void Table::update(string i, DefStmt v)
             exit(-1);
         }
     } else {
-        tableMapFunction->insert(pair<string, DefStmt>(i, v));
+        cout << "Insert in funct" << endl;
+        tableMapFunction->insert(pair<string, DefStmt*>(i, v));
         tableMapTypes->insert(pair<string, Types>(i, Types::Function));
     }   
 }
@@ -138,6 +145,8 @@ void Table::update(string i, DefStmt v)
 // Returns ERROR if not in table
 Types Table::getType(string i)
 {
+    cout << "Get type of " << i << endl;
+    print();
     auto it = tableMapTypes->find(i);
     if (it != tableMapTypes->end())
         return it->second;
@@ -147,6 +156,9 @@ Types Table::getType(string i)
 
 int Table::getInt(string i)
 {
+    cout << "Get int of " << i << endl;
+    print();
+
     auto it = tableMapInt->find(i);
     if (it != tableMapInt->end())
         return tableMapInt->find(i)->second;
@@ -162,6 +174,9 @@ int Table::getInt(string i)
 
 bool Table::getBool(string i)
 {
+    cout << "Get bool of " << i << endl;
+    print();
+
     auto it = tableMapBool->find(i);
     if (it != tableMapBool->end())
         return tableMapBool->find(i)->second;
@@ -177,8 +192,11 @@ bool Table::getBool(string i)
 
 }
 
-DefStmt Table::getFunct(string i)
+DefStmt* Table::getFunct(string i)
 {
+    cout << "Get funtion of " << i << endl;
+    print();
+
     auto it = tableMapFunction->find(i);
     if (it != tableMapFunction->end())
         return tableMapFunction->find(i)->second;
@@ -193,6 +211,25 @@ DefStmt Table::getFunct(string i)
     exit(-1);
 }
 
+void Table::print()
+{
+    cout << "[tableMapTypes] " << endl;
+    for(auto it = tableMapTypes->cbegin(); it != tableMapTypes->cend(); ++it)
+        cout << "\t" << it->first << endl;
+
+    cout << "[tableMapInt] " << endl;
+    for(auto it = tableMapInt->cbegin(); it != tableMapInt->cend(); ++it)
+        cout << "\t" << it->first << endl;
+
+    cout << "[tableMapBool] " << endl;
+    for(auto it = tableMapBool->cbegin(); it != tableMapBool->cend(); ++it)
+        cout << "\t" << it->first << endl;
+
+    cout << "[tableMapFunction] " << endl;
+    for(auto it = tableMapFunction->cbegin(); it != tableMapFunction->cend(); ++it)
+        cout << "\t" << it->first << endl;
+}
+
 void Table::remove(string i)
 {
     tableMapTypes->erase(i);
@@ -204,44 +241,48 @@ void Table::remove(string i)
 
 /* Statement structs */
 
-Program_::Program_(CompStmt comp)
+Program::Program(CompStmt *comp)
     : compStmt{comp}
 {}
 
-void Program_::print()
+void Program::print()
 {
     cout << "Program(" << endl << "\t";
     compStmt->print();
     cout << ")" << endl;
 }
 
-void Program_::interp(Table *t)
+void Program::interp(Table *t)
 {
     compStmt->interp(t);
 }
 
 
-CompStmt_::CompStmt_(Stmt s)
+CompStmt::CompStmt(Stmt s)
     :isArray(false), stmt{s}
 {}
 
-CompStmt_::CompStmt_(Stmt s, CompStmt comp)
+CompStmt::CompStmt(Stmt s, CompStmt *comp)
     :isArray{true}, compStmt{comp}, stmt{s}
 {}
 
-void CompStmt_::print()
+void CompStmt::print()
 {
     cout << "CompStmt(" << endl << "\t";
-    compStmt->print();
-    cout << ",";
     stmt->print();
+    if (isArray){
+        cout << ",";
+        compStmt->print();
+    }
     cout << ")" << endl;
 }
 
-void CompStmt_::interp(Table *t)
+void CompStmt::interp(Table *t)
 {
-    compStmt->interp(t);
     stmt->interp(t);
+
+    if (isArray)
+        compStmt->interp(t);
 }
 
 
@@ -287,7 +328,7 @@ void UndefStmt::interp(Table* t)
 }
 
 
-DefStmt::DefStmt(char* id, ArgList argl, CompStmt comps)
+DefStmt::DefStmt(char* id, ArgList argl, CompStmt *comps)
     :argList{argl}, compStmt{comps}
 {
     identifier = string(id);
@@ -305,25 +346,26 @@ void DefStmt::print()
 void DefStmt::interp(Table* t)
 {
     t->update(identifier, this);
-
+    
     globalTable = t;
 
     // Local table has the global as backup
     localTable = new Table(t, this);
 }
 
-ReturnValue DefStmt::run(Exprs exprs)
+ReturnValue DefStmt::run(Exprs exprs, Table *argTable)
 {
     // check arg list length
     int len = exprs->getLength();
     if (len != argList->getLength()){
-        cout << "[ DefStmt::run(Exprs) ] Function called with wrong amount of args..." << endl;
+        
+        cout << "[ DefStmt::run(Exprs) ] Function called with wrong amount of args... " << endl;
         exit(-1);
     }
 
     // Insert exprs in local table
     vector<string> argl = argList->interp(globalTable);
-    vector<ReturnValue> expl = exprs->interp(globalTable);
+    vector<ReturnValue> expl = exprs->interp(argTable);
     for (int i = 0; i < len; i++){
         Types returnType = expl[i].getType();
         switch (returnType)
@@ -366,15 +408,15 @@ void ReturnStmt::interp(Table *t)
 }
 
 
-Elsif_::Elsif_()
+Elsif::Elsif()
     :isEmpty(true)
 {}
 
-Elsif_::Elsif_(Expr e, CompStmt comp, Elsif elif)
+Elsif::Elsif(Expr e, CompStmt *comp, Elsif *elif)
     :isEmpty{false}, expr{e}, compStmt{comp}, elsifTail{elif}
 {}
 
-void Elsif_::print()
+void Elsif::print()
 {
     if (isEmpty){
         cout << "Elsif()" << endl;
@@ -390,7 +432,7 @@ void Elsif_::print()
     cout << ")" << endl;
 }
 
-bool Elsif_::interp(Table *t)
+bool Elsif::interp(Table *t)
 {
     if (isEmpty)
         return false;
@@ -410,28 +452,28 @@ bool Elsif_::interp(Table *t)
     }
 }
 
-Else_::Else_()
+Else::Else()
     :isEmpty{true}
 {}
 
-Else_::Else_(CompStmt comp)
+Else::Else(CompStmt *comp)
     :isEmpty{false}, compStmt{comp}
 {}
 
-void Else_::print()
+void Else::print()
 {
     cout << "Else(" << endl << "\t";
     compStmt->print();
     cout << ")" << endl;
 }
 
-void Else_::interp(Table *t)
+void Else::interp(Table *t)
 {
     compStmt->interp(t);
 }
 
 
-IfStmt::IfStmt(Expr e, CompStmt comp, Elsif eif, Else el)
+IfStmt::IfStmt(Expr e, CompStmt *comp, Elsif *eif, Else *el)
     :expr{e}, compStmt{comp}, elsif{eif}, els{el}
 {}
 
@@ -466,7 +508,7 @@ void IfStmt::interp(Table *t)
 }
 
 
-UnlessStmt::UnlessStmt(Expr e, CompStmt comp, Else el)
+UnlessStmt::UnlessStmt(Expr e, CompStmt *comp, Else *el)
     :expr{e}, compStmt{comp}, els{el}
 {}
 
@@ -498,7 +540,7 @@ void UnlessStmt::interp(Table *t)
 }
 
 
-WhileStmt::WhileStmt(Expr e, CompStmt comp)
+WhileStmt::WhileStmt(Expr e, CompStmt *comp)
     :expr{e}, compStmt{comp}
 {}
 
@@ -533,7 +575,7 @@ void WhileStmt::interp(Table *t)
 }
 
 
-UntilStmt::UntilStmt(Expr e, CompStmt comp)
+UntilStmt::UntilStmt(Expr e, CompStmt *comp)
     :expr{e}, compStmt{comp}
 {}
 
@@ -568,15 +610,15 @@ void UntilStmt::interp(Table *t)
 }
 
 
-When_::When_()
+When::When()
     :isEmpty{true}
 {}
 
-When_::When_(Expr e, CompStmt comp, When w)
+When::When(Expr e, CompStmt *comp, When *w)
     :isEmpty{false}, expr{e}, compStmt{comp}, whenTail{w}
 {}
 
-void When_::print()
+void When::print()
 {
     if (isEmpty){
         cout << "When()" << endl;
@@ -592,7 +634,7 @@ void When_::print()
     cout << ")" << endl;
 }
 
-bool When_::interp(Table *t, Expr e)
+bool When::interp(Table *t, Expr e)
 {
     if (isEmpty)
         return false;
@@ -608,7 +650,7 @@ bool When_::interp(Table *t, Expr e)
 }
 
 
-CaseStmt::CaseStmt(Expr ce, Expr we, CompStmt comp, When w, Else el)
+CaseStmt::CaseStmt(Expr ce, Expr we, CompStmt *comp, When *w, Else *el)
     :caseExpr{ce}, whenExpr{we}, compStmt{comp}, when{w}, els{el}
 {}
 
@@ -680,59 +722,72 @@ ReturnValue AssignOpExpr::interp(Table* t)
     switch (assignop)
     {
     case Assignop::Assign:
-        if (rv.getType() == Types::Integer) 
-            t->update(identifier, rv.getInt());
-        else 
-            t->update(identifier, rv.getBool());
+        if (rv.getType() == Types::Integer){
+            int val = rv.getInt();
+            t->update(identifier, val);
+            return ReturnValue(val);
+        } else {
+            bool val = rv.getBool();
+            t->update(identifier, val);
+            return ReturnValue(val);
+        }
+            
         break;
 
     case Assignop::PlusAssign:
     case Assignop::MinAssign:
     case Assignop::MulAssign:
     case Assignop::DivAssign:
-        int idv = t->getInt(identifier);
+    {
+        int idvInt = t->getInt(identifier);
 
-        int result;
+        int resultInt;
         switch (assignop)
         {
         case Assignop::PlusAssign:
-            result = idv + rv.getInt();
+            resultInt = idvInt + rv.getInt();
             break;
         case Assignop::MinAssign:
-            result = idv - rv.getInt();
+            resultInt = idvInt - rv.getInt();
             break;
         case Assignop::MulAssign:
-            result = idv * rv.getInt();
+            resultInt = idvInt * rv.getInt();
             break;
         case Assignop::DivAssign:
-            result = idv / rv.getInt();
+            resultInt = idvInt / rv.getInt();
             break;
         default:
             break;
         }
 
-        t->update(identifier, result);
-        break;
+        t->update(identifier, resultInt);
 
+        return ReturnValue(resultInt);
+        break;
+    }
     case Assignop::AndAssign:
     case Assignop::OrAssign:
-        bool idv = t->getBool(identifier);
+    {
+        bool idvBool = t->getBool(identifier);
 
-        bool result;
+        bool resultBool;
         switch (assignop)
         {
         case Assignop::AndAssign:
-            result = (idv && rv.getBool());
+            resultBool = (idvBool && rv.getBool());
             break;
         case Assignop::OrAssign:
-            result = (idv || rv.getBool());
+            resultBool = (idvBool || rv.getBool());
             break;
         default:
             break;
         }
 
-        t->update(identifier, result);
+        t->update(identifier, resultBool);
+
+        return ReturnValue(resultBool);
         break;
+    }
     default:
         break;
     }
@@ -756,7 +811,6 @@ ReturnValue BinOpExpr::interp(Table *t)
     ReturnValue rvL = exprL->interp(t);
     ReturnValue rvR = exprR->interp(t);
 
-    bool isInt = (rvL.getType() == Types::Integer);
     switch (binop)
     {
     case Binop::Plus:
@@ -818,15 +872,15 @@ ReturnValue NotExpr::interp(Table *t)
 }
 
 
-Literal_::Literal_(int v)
+Literal::Literal(int v)
     :isInt{true}, intValue{v}
 {}
 
-Literal_::Literal_(bool v)
+Literal::Literal(bool v)
     :isInt{false}, boolValue{v}
 {}
 
-void Literal_::print()
+void Literal::print()
 {   
     if (isInt)
         cout << "Literal(" << intValue << ")" << endl;
@@ -834,7 +888,7 @@ void Literal_::print()
         cout << "Literal(" << boolValue << ")" << endl;
 }
 
-ReturnValue Literal_::interp(Table *t)
+ReturnValue Literal::interp(Table *t)
 {
     if (isInt)
         return ReturnValue(intValue);
@@ -843,7 +897,7 @@ ReturnValue Literal_::interp(Table *t)
 }
 
 
-LitExpr::LitExpr(Literal l)
+LitExpr::LitExpr(Literal *l)
     :lit{l}
 {}
 
@@ -872,6 +926,7 @@ void IdExpr::print()
 
 ReturnValue IdExpr::interp(Table *t)
 {
+    cout << "search type of " << identifier << endl;
     Types type = t->getType(identifier);
 
     switch (type)
@@ -882,8 +937,12 @@ ReturnValue IdExpr::interp(Table *t)
     case Types::Boolean:
         return ReturnValue(t->getBool(identifier));
         break;
+    case Types::Function:
+        cout << "[ IdExpr::interp(Table) ] var is not a boolean or an integer but a function..." << endl;
+        exit(-1);
+        break;
     default:
-        cout << "[ IdExpr::interp(Table) ] var is not a boolean or an integer..." << endl;
+        cout << "[ IdExpr::interp(Table) ] var is not in table error.." << endl;
         exit(-1);
         break;
     }
@@ -921,9 +980,9 @@ void FunctionExpr::print()
 }
 
 ReturnValue FunctionExpr::interp(Table *t)
-{
-    DefStmt f = t->getFunct(identifier);
-    return f.run(exprs);
+{   
+    DefStmt *f = t->getFunct(identifier);
+    return f->run(exprs, t);
 }
 
 
@@ -938,4 +997,135 @@ void ErrorExpr::print()
 ReturnValue ErrorExpr::interp(Table *t)
 {
     return ReturnValue();
+}
+
+
+LastExprs::LastExprs()
+    :isEmpty{true}
+{}
+
+LastExprs::LastExprs(Expr e)
+    :isEmpty{false}, expr{e}
+{}
+
+void LastExprs::print()
+{
+    if (isEmpty){
+        cout << "LastExprs()" << endl;
+        return;
+    }
+    
+    cout << "LastExprs(" << endl << "\t";
+    expr->print();
+    cout << ")" << endl;
+}
+
+int LastExprs::getLength()
+{
+    if (isEmpty)
+        return 0;
+    else
+        return 1;
+}
+
+vector<ReturnValue> LastExprs::interp(Table *t)
+{
+    vector<ReturnValue> values;
+    if (!isEmpty)
+        values.push_back(expr->interp(t));
+
+    return values;
+}
+
+
+PairExprs::PairExprs(Exprs exs, Expr e)
+    :exprs{exs}, expr{e}
+{}
+
+void PairExprs::print()
+{
+    cout << "PairExprs(" << endl << "\t";
+    exprs->print();
+    cout << "," << endl;
+    expr->print();
+    cout << ")" << endl;
+}   
+
+int PairExprs::getLength()
+{
+    return exprs->getLength() + 1;
+}
+
+vector<ReturnValue> PairExprs::interp(Table *t)
+{
+    vector<ReturnValue> values = exprs->interp(t);
+    values.push_back(expr->interp(t));
+
+    return values;
+}
+
+
+LastArgList::LastArgList()
+    :isEmpty{true}
+{}
+
+LastArgList::LastArgList(char* id)
+    :isEmpty{false}
+{
+    identifier = string(id);
+}
+
+void LastArgList::print()
+{
+    if (isEmpty){
+        cout << "LastArgList()" << endl;
+        return;
+    }
+    
+    cout << "LastArgList( \"" << identifier << "\" )" << endl;
+}
+
+int LastArgList::getLength()
+{
+    if (isEmpty)
+        return 0;
+    else
+        return 1;
+}
+
+vector<string> LastArgList::interp(Table *t)
+{
+    vector<string> ids;
+    if (!isEmpty)
+        ids.push_back(identifier);
+    
+    return ids;
+}
+
+
+PairArgList::PairArgList(ArgList al, char* id)
+    :argList{al}
+{
+    identifier = string(id);
+}
+
+void PairArgList::print()
+{
+    cout << "PairArgList(" << endl << "\t";
+    argList->print();
+    cout << ", \"" << identifier << "\" )" << endl;
+}
+
+int PairArgList::getLength()
+{
+    return argList->getLength() + 1;
+}
+
+vector<string> PairArgList::interp(Table *t)
+{
+    vector<string> ids = argList->interp(t);
+
+    ids.push_back(identifier);
+
+    return ids;
 }

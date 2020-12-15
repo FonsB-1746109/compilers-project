@@ -73,7 +73,7 @@ struct Table
 
     map<string, int> *tableMapInt;
     map<string, bool> *tableMapBool;
-    map<string, DefStmt> *tableMapFunction;
+    map<string, DefStmt*> *tableMapFunction;
 
     map<string, Types> *tableMapTypes;
 
@@ -91,13 +91,15 @@ struct Table
     void update(string i, bool v);
 
     // Update for functions
-    void update(string i, DefStmt v);
+    void update(string i, DefStmt *v);
 
     Types getType(string i);
 
     int getInt(string i);
     bool getBool(string i);
-    DefStmt getFunct(string i);
+    DefStmt* getFunct(string i);
+
+    void print();
 
     void remove(string i);
 
@@ -140,9 +142,9 @@ struct ArgList_
     virtual ~ArgList_(){};
 };
 
+
 /* forward decl types */
-struct CompStmt_;
-typedef CompStmt_ *CompStmt;
+struct CompStmt;
 
 /* Struct typedefs */
 typedef Stmt_ *Stmt;
@@ -150,33 +152,32 @@ typedef Expr_ *Expr;
 typedef Exprs_ *Exprs;
 typedef ArgList_ *ArgList;
 
-struct Program_
+struct Program
 {
-    CompStmt compStmt;
+    CompStmt *compStmt;
 
-    Program_() {};
-    Program_(CompStmt comp);
+    Program() {};
+    Program(CompStmt *comp);
 
     void print();
     void interp(Table *t);
 
-    ~Program_(){};
+    ~Program(){};
 };
-typedef Program_ *Program;
 
-struct CompStmt_
+struct CompStmt
 {
     bool isArray;
-    CompStmt compStmt;
+    CompStmt *compStmt;
     Stmt stmt;
 
-    CompStmt_(Stmt s);
-    CompStmt_(Stmt s, CompStmt comp);
+    CompStmt(Stmt s);
+    CompStmt(Stmt s, CompStmt *comp);
 
     void print();
     void interp(Table *t);
 
-    ~CompStmt_(){};
+    ~CompStmt(){};
 };
 
 /* Statement structs */
@@ -209,7 +210,7 @@ struct DefStmt : public Stmt_
 {
     string identifier;
     ArgList argList;
-    CompStmt compStmt;
+    CompStmt *compStmt;
 
     ReturnValue returnVal;
 
@@ -217,11 +218,11 @@ struct DefStmt : public Stmt_
     Table *localTable;
     Table *globalTable;
 
-    DefStmt(char *id, ArgList argl, CompStmt comps);
+    DefStmt(char *id, ArgList argl, CompStmt *comps);
 
     void print();
     void interp(Table *t);
-    ReturnValue run(Exprs exprs);
+    ReturnValue run(Exprs exprs, Table *argTable);
     void addReturnValue(ReturnValue rv);
 
     ~DefStmt(){};
@@ -240,48 +241,45 @@ struct ReturnStmt : public Stmt_
 };
 
 /* If statement structs */
-struct Elsif_;
-typedef Elsif_ *Elsif;
-struct Elsif_
+struct Elsif
 {
     bool isEmpty;
-    Elsif elsifTail;
+    Elsif *elsifTail;
     Expr expr;
-    CompStmt compStmt;
+    CompStmt *compStmt;
 
-    Elsif_();
-    Elsif_(Expr e, CompStmt comp, Elsif elif);
+    Elsif();
+    Elsif(Expr e, CompStmt *comp, Elsif *elif);
 
     void print();
     bool interp(Table *t);
 
-    ~Elsif_(){};
+    ~Elsif(){};
 };
 
-struct Else_
+struct Else
 {
     bool isEmpty;
-    CompStmt compStmt;
+    CompStmt *compStmt;
 
-    Else_();
-    Else_(CompStmt comp);
+    Else();
+    Else(CompStmt *comp);
 
     void print();
     void interp(Table *t);
 
-    ~Else_(){};
+    ~Else(){};
 };
-typedef Else_ *Else;
 
 struct IfStmt : public Stmt_
 {
     Expr expr;
-    CompStmt compStmt;
-    Elsif elsif;
-    Else els;
+    CompStmt *compStmt;
+    Elsif *elsif;
+    Else *els;
 
     IfStmt(){};
-    IfStmt(Expr e, CompStmt comp, Elsif eif, Else el);
+    IfStmt(Expr e, CompStmt *comp, Elsif *eif, Else *el);
 
     void print();
     void interp(Table *t);
@@ -292,11 +290,11 @@ struct IfStmt : public Stmt_
 struct UnlessStmt : public Stmt_
 {
     Expr expr;
-    CompStmt compStmt;
-    Else els;
+    CompStmt *compStmt;
+    Else *els;
 
     UnlessStmt(){};
-    UnlessStmt(Expr e, CompStmt comp, Else el);
+    UnlessStmt(Expr e, CompStmt *comp, Else *el);
 
     void print();
     void interp(Table *t);
@@ -307,9 +305,9 @@ struct UnlessStmt : public Stmt_
 struct WhileStmt : public Stmt_
 {
     Expr expr;
-    CompStmt compStmt;
+    CompStmt *compStmt;
 
-    WhileStmt(Expr e, CompStmt comp);
+    WhileStmt(Expr e, CompStmt *comp);
 
     void print();
     void interp(Table *t);
@@ -320,9 +318,9 @@ struct WhileStmt : public Stmt_
 struct UntilStmt : public Stmt_
 {
     Expr expr;
-    CompStmt compStmt;
+    CompStmt *compStmt;
 
-    UntilStmt(Expr e, CompStmt comp);
+    UntilStmt(Expr e, CompStmt *comp);
 
     void print();
     void interp(Table *t);
@@ -330,34 +328,32 @@ struct UntilStmt : public Stmt_
     ~UntilStmt(){};
 };
 
-struct When_;
-typedef When_ *When;
-struct When_
+struct When
 {
     bool isEmpty;
-    When whenTail;
+    When *whenTail;
     Expr expr;
-    CompStmt compStmt;
+    CompStmt *compStmt;
 
-    When_();
-    When_(Expr e, CompStmt comp, When w);
+    When();
+    When(Expr e, CompStmt *comp, When *w);
 
     void print();
     bool interp(Table *t, Expr e);
 
-    ~When_(){};
+    ~When(){};
 };
 
 struct CaseStmt : public Stmt_
 {
     Expr caseExpr;
     Expr whenExpr;
-    CompStmt compStmt;
-    When when;
-    Else els;
+    CompStmt *compStmt;
+    When *when;
+    Else *els;
 
     CaseStmt(){};
-    CaseStmt(Expr ce, Expr we, CompStmt comp, When w, Else el);
+    CaseStmt(Expr ce, Expr we, CompStmt *comp, When *w, Else *el);
 
     void print();
     void interp(Table *t);
@@ -418,27 +414,26 @@ struct NotExpr : public Expr_
     ~NotExpr(){};
 };
 
-struct Literal_
+struct Literal
 {
     bool isInt;
     int intValue;
     bool boolValue;
 
-    Literal_(int v);
-    Literal_(bool v);
+    Literal(int v);
+    Literal(bool v);
 
     void print();
     ReturnValue interp(Table *t);
 
-    ~Literal_(){};
+    ~Literal(){};
 };
-typedef Literal_ *Literal;
 
 struct LitExpr : public Expr_
 {
-    Literal lit;
+    Literal *lit;
 
-    LitExpr(Literal l);
+    LitExpr(Literal *l);
 
     void print();
     ReturnValue interp(Table *t);
@@ -493,4 +488,68 @@ struct ErrorExpr : public Expr_
     ~ErrorExpr(){};
 };
 
+struct LastExprs : public Exprs_
+{
+    bool isEmpty;
+    Expr expr;
+    
+    LastExprs();
+    LastExprs(Expr e);
+
+    void print();
+    int getLength();
+    vector<ReturnValue> interp(Table *t);
+
+    ~LastExprs(){};
+};
+
+struct PairExprs : public Exprs_
+{
+    Expr expr;
+    Exprs exprs;   
+
+    PairExprs(Exprs exs, Expr e);
+
+    void print();
+    int getLength();
+    vector<ReturnValue> interp(Table *t);
+
+    ~PairExprs(){};
+};
+
+struct LastArgList : public ArgList_
+{
+    bool isEmpty;
+    string identifier;
+    
+    LastArgList();
+    LastArgList(char* id);
+    
+    void print();
+    int getLength();
+    vector<string> interp(Table *t);
+
+    ~LastArgList(){};
+};
+
+struct PairArgList : public ArgList_
+{
+    string identifier;
+    ArgList argList;
+    
+    PairArgList(ArgList al, char* id);
+
+    void print();
+    int getLength();
+    vector<string> interp(Table *t);
+
+    ~PairArgList(){};
+};
+
+#include "absyn.cpp"
+
 #endif
+
+//======================================================================
+// CPP FILE TEST
+

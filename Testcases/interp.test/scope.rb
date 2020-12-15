@@ -1,6 +1,7 @@
-def f()
-  a = 4 # lokale variabele
+def f(b) 
+  a = b # lokale variabele
+  print(a)
 end
 a = 3
-f()
-print a
+f(5)
+print(a)

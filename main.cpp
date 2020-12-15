@@ -17,10 +17,16 @@ int main(int argc, char* argv[])
   }
   // Set Flex to read from it instead of defaulting to STDIN:
   yyin = myfile;
-  // Parse through the input:
-  yyparse();
 
+  // Parse through the input:
+  if (yyparse() != 0){
+    std::cout << "Parsing Error" << std::endl;
+    return 1;
+  }
+    
+  Table *t = new Table();
   tree->print();
+  tree->interp(t);
 
   return 0;
 }

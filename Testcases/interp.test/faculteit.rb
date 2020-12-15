@@ -5,4 +5,4 @@ def f(n)
     return n * f(n-1)
   end
 end
-print f(5)
+print(f(10))
