@@ -1,0 +1,559 @@
+LastArgList(id)
+LastArgList(arglist,id)
+LastArgList(arglist,id)
+IdExpr(id)
+IdExpr(id)
+BinOpExpr(expr,==,expr)
+IdExpr(id)
+ReturnStmt(expr)
+CompStmt(stmt) t
+IdExpr(id)
+IdExpr(id)
+BinOpExpr(expr,==,expr)
+IdExpr(id)
+ReturnStmt(expr)
+CompStmt(stmt) t
+Elsif()
+Elsif(expr,compstmt,elsif)
+IdExpr(id)
+ReturnStmt(expr)
+CompStmt(stmt) t
+Else(comstmt)
+IfStmt(expr,comptstmt,elsif,else)
+CompStmt(stmt) t
+DefStmt(id,arglist,compstmt)
+LastArgList(id)
+IdExpr(id)
+PrintStmt(expr)
+CompStmt(stmt) t
+DefStmt(id,arglist,compstmt)
+Literal(int)
+LitExpr(literal)
+AssignOpExpr(id,=,expr)
+ExprStmt(expr)
+IdExpr(id)
+LastExpr(expr)
+FunctionExpr(id,exprs)
+ExprStmt(expr)
+Literal(bool)
+LitExpr(literal)
+AssignOpExpr(id,=,expr)
+ExprStmt(expr)
+IdExpr(id)
+LastExpr(expr)
+FunctionExpr(id,exprs)
+ExprStmt(expr)
+IdExpr(id)
+IdExpr(id)
+PrintStmt(expr)
+CompStmt(stmt) t
+Elsif()
+Else()
+IfStmt(expr,comptstmt,elsif,else)
+Literal(int)
+LitExpr(literal)
+AssignOpExpr(id,=,expr)
+ExprStmt(expr)
+IdExpr(id)
+NotExpr(expr)
+Literal(int)
+LitExpr(literal)
+AssignOpExpr(id,+=,expr)
+ExprStmt(expr)
+IdExpr(id)
+Literal(int)
+LitExpr(literal)
+BinOpExpr(expr,==,expr)
+Literal(bool)
+LitExpr(literal)
+AssignOpExpr(id,=,expr)
+ExprStmt(expr)
+CompStmt(stmt) t
+IdExpr(id)
+Literal(int)
+LitExpr(literal)
+BinOpExpr(expr,==,expr)
+Literal(int)
+LitExpr(literal)
+PrintStmt(expr)
+CompStmt(stmt) t
+Elsif()
+Elsif(expr,compstmt,elsif)
+Else()
+IfStmt(expr,comptstmt,elsif,else)
+CompStmt(stmt) t
+CompStmt(stmt,compstmt)
+UntilStmt(expr,compstmt)
+IdExpr(id)
+PrintStmt(expr)
+Literal(int)
+LitExpr(literal)
+AssignOpExpr(id,=,expr)
+ExprStmt(expr)
+IdExpr(id)
+Literal(int)
+LitExpr(literal)
+BinOpExpr(expr,<=,expr)
+IdExpr(id)
+Literal(int)
+LitExpr(literal)
+IdExpr(id)
+Literal(int)
+LitExpr(literal)
+BinOpExpr(expr,*,expr)
+PrintStmt(expr)
+CompStmt(stmt) t
+Literal(int)
+LitExpr(literal)
+IdExpr(id)
+Literal(int)
+LitExpr(literal)
+BinOpExpr(expr,*,expr)
+PrintStmt(expr)
+CompStmt(stmt) t
+Literal(int)
+LitExpr(literal)
+IdExpr(id)
+Literal(int)
+LitExpr(literal)
+BinOpExpr(expr,*,expr)
+PrintStmt(expr)
+CompStmt(stmt) t
+Literal(int)
+LitExpr(literal)
+IdExpr(id)
+Literal(int)
+LitExpr(literal)
+BinOpExpr(expr,*,expr)
+PrintStmt(expr)
+CompStmt(stmt) t
+Literal(int)
+LitExpr(literal)
+Literal(int)
+LitExpr(literal)
+LastExpr(expr)
+Literal(int)
+LitExpr(literal)
+LastExpr(exprs,expr)
+IdExpr(id)
+LastExpr(exprs,expr)
+FunctionExpr(id,exprs)
+PrintStmt(expr)
+CompStmt(stmt) t
+Literal(int)
+LitExpr(literal)
+Literal(int)
+LitExpr(literal)
+LastExpr(expr)
+Literal(int)
+LitExpr(literal)
+LastExpr(exprs,expr)
+IdExpr(id)
+LastExpr(exprs,expr)
+FunctionExpr(id,exprs)
+PrintStmt(expr)
+CompStmt(stmt) t
+When()
+When(expr,compstmt,when)
+When(expr,compstmt,when)
+When(expr,compstmt,when)
+When(expr,compstmt,when)
+When(expr,compstmt,when)
+Literal(int)
+LitExpr(literal)
+PrintStmt(expr)
+CompStmt(stmt) t
+Else(comstmt)
+CaseStmt(expr,expr,compstmt,when,else)
+Literal(int)
+LitExpr(literal)
+AssignOpExpr(id,+=,expr)
+ExprStmt(expr)
+CompStmt(stmt) t
+CompStmt(stmt,compstmt)
+WhileStmt(expr,compstmt)
+CompStmt(stmt) t
+CompStmt(stmt,compstmt)
+CompStmt(stmt,compstmt)
+CompStmt(stmt,compstmt)
+CompStmt(stmt,compstmt)
+CompStmt(stmt,compstmt)
+CompStmt(stmt,compstmt)
+CompStmt(stmt,compstmt)
+CompStmt(stmt,compstmt)
+CompStmt(stmt,compstmt)
+CompStmt(stmt,compstmt)
+CompStmt(stmt,compstmt)
+Program(compstmt)
+::TREE PRINT::
+Program(
+	CompStmt(
+	DefStmt(id=blub, 
+	PairArgList(
+	PairArgList(
+	LastArgList( "a" )
+, "b" )
+, "c" )
+,
+CompStmt(
+	IfStmt(
+	BinOpExpr(
+	IdExpr( a )
+, [assignop],
+IdExpr( b )
+)
+,
+CompStmt(
+	ReturnStmt(
+	IdExpr( c )
+)
+)
+,
+Elsif(
+	BinOpExpr(
+	IdExpr( a )
+, [assignop],
+IdExpr( c )
+)
+,
+CompStmt(
+	ReturnStmt(
+	IdExpr( b )
+)
+)
+,
+Elsif()
+)
+,
+Else(
+	CompStmt(
+	ReturnStmt(
+	IdExpr( a )
+)
+)
+)
+)
+)
+)
+,CompStmt(
+	DefStmt(id=a, 
+	LastArgList( "a" )
+,
+CompStmt(
+	PrintStmt(
+	IdExpr( a )
+)
+)
+)
+,CompStmt(
+	ExprStmt(
+	AssignOpExpr(id=a, [assignop],
+	LitExpr(
+	Literal(5)
+)
+)
+)
+,CompStmt(
+	ExprStmt(
+	FunctionExpr(a,
+	LastExprs(
+	IdExpr( a )
+)
+)
+)
+,CompStmt(
+	ExprStmt(
+	AssignOpExpr(id=a, [assignop],
+	LitExpr(
+	Literal(1)
+)
+)
+)
+,CompStmt(
+	ExprStmt(
+	FunctionExpr(a,
+	LastExprs(
+	IdExpr( a )
+)
+)
+)
+,CompStmt(
+	IfStmt(
+	IdExpr( a )
+,
+CompStmt(
+	PrintStmt(
+	IdExpr( a )
+)
+)
+,
+Elsif()
+,
+Else()
+)
+,CompStmt(
+	ExprStmt(
+	AssignOpExpr(id=b, [assignop],
+	LitExpr(
+	Literal(0)
+)
+)
+)
+,CompStmt(
+	UntillStmt(
+	NotExpr(
+	IdExpr( a )
+)
+,
+CompStmt(
+	ExprStmt(
+	AssignOpExpr(id=b, [assignop],
+	LitExpr(
+	Literal(1)
+)
+)
+)
+,CompStmt(
+	IfStmt(
+	BinOpExpr(
+	IdExpr( b )
+, [assignop],
+LitExpr(
+	Literal(100)
+)
+)
+,
+CompStmt(
+	ExprStmt(
+	AssignOpExpr(id=a, [assignop],
+	LitExpr(
+	Literal(0)
+)
+)
+)
+)
+,
+Elsif(
+	BinOpExpr(
+	IdExpr( b )
+, [assignop],
+LitExpr(
+	Literal(50)
+)
+)
+,
+CompStmt(
+	PrintStmt(
+	LitExpr(
+	Literal(9999999)
+)
+)
+)
+,
+Elsif()
+)
+,
+Else()
+)
+)
+)
+)
+,CompStmt(
+	PrintStmt(
+	IdExpr( b )
+)
+,CompStmt(
+	ExprStmt(
+	AssignOpExpr(id=c, [assignop],
+	LitExpr(
+	Literal(0)
+)
+)
+)
+,CompStmt(
+	WhileStmt(
+	BinOpExpr(
+	IdExpr( c )
+, [assignop],
+LitExpr(
+	Literal(5)
+)
+)
+,
+CompStmt(
+	CaseStmt(
+	IdExpr( c )
+,
+LitExpr(
+	Literal(0)
+)
+,
+CompStmt(
+	PrintStmt(
+	BinOpExpr(
+	IdExpr( c )
+, [assignop],
+LitExpr(
+	Literal(1)
+)
+)
+)
+)
+,
+When(
+	LitExpr(
+	Literal(1)
+)
+,
+CompStmt(
+	PrintStmt(
+	BinOpExpr(
+	IdExpr( c )
+, [assignop],
+LitExpr(
+	Literal(10)
+)
+)
+)
+)
+,
+When(
+	LitExpr(
+	Literal(2)
+)
+,
+CompStmt(
+	PrintStmt(
+	BinOpExpr(
+	IdExpr( c )
+, [assignop],
+LitExpr(
+	Literal(100)
+)
+)
+)
+)
+,
+When(
+	LitExpr(
+	Literal(3)
+)
+,
+CompStmt(
+	PrintStmt(
+	BinOpExpr(
+	IdExpr( c )
+, [assignop],
+LitExpr(
+	Literal(1000)
+)
+)
+)
+)
+,
+When(
+	LitExpr(
+	Literal(4)
+)
+,
+CompStmt(
+	PrintStmt(
+	FunctionExpr(blub,
+	PairExprs(
+	PairExprs(
+	LastExprs(
+	LitExpr(
+	Literal(4)
+)
+)
+,
+LitExpr(
+	Literal(123456789)
+)
+)
+,
+IdExpr( c )
+)
+)
+)
+)
+,
+When(
+	LitExpr(
+	Literal(5)
+)
+,
+CompStmt(
+	PrintStmt(
+	FunctionExpr(blub,
+	PairExprs(
+	PairExprs(
+	LastExprs(
+	LitExpr(
+	Literal(100)
+)
+)
+,
+LitExpr(
+	Literal(888)
+)
+)
+,
+IdExpr( b )
+)
+)
+)
+)
+,
+When()
+)
+)
+)
+)
+)
+,
+Else(
+	CompStmt(
+	PrintStmt(
+	LitExpr(
+	Literal(55555)
+)
+)
+)
+)
+)
+,CompStmt(
+	ExprStmt(
+	AssignOpExpr(id=c, [assignop],
+	LitExpr(
+	Literal(1)
+)
+)
+)
+)
+)
+)
+)
+)
+)
+)
+)
+)
+)
+)
+)
+)
+)
+)
+)
+5
+true
+true
+9999999
+100
+0
+10
+200
+3000
+123456789
+888

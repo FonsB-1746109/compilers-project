@@ -24,47 +24,46 @@ comment     ("--"|"#").*
 whitespace  (" "|"\t")+
 
 %%
-
-;                       { return SEMICOLON; }
-,                       { return COMMA; }
-undef                   { return UNDEF; }
-def                     { return DEF; }
-"("                     { return LPAREN; }
-")"                     { return RPAREN; }
-end                     { return END; }
-return                  { return RETURN; }
-if                      { return IF; }
-then                    { return THEN; }
-elsif                   { return ELSIF; }
-else                    { return ELSE; }
-unless                  { return UNLESS; }
-while                   { return WHILE; }
-do                      { return DO; }
-until                   { return UNTIL; }
-case                    { return CASE; }
-when                    { return WHEN; }
-print                   { return PRINT; }
-"="                     { return ASSIGN; }
-"+="                    { return PLUSASSIGN; }
-"-="                    { return MINUSASSIGN; }
-"*="                    { return MULASSIGN; }
-"/="                    { return DIVASSIGN; }
-"&&="                   { return ANDASSIGN; }
-"||="                   { return ORASSIGN; }
-"+"                     { return PLUS; }
-"-"                     { return MINUS; }
-"*"                     { return MUL; }
-"/"                     { return DIV; }
-">"                     { return GT; }
-">="                    { return GE; }
-"<"                     { return LT; }
-"<="                    { return LE; }
-"=="                    { return EQ; }
-"!="                    { return NE; }
-"&&"                    { return AND; }
-"||"                    { return OR; }
-"!"                     { return NOT; }
-\n                      { line_nr++; col_nr=0; return NEWLINE; }
+;                       { ADJUST(); return SEMICOLON; }
+,                       { ADJUST(); return COMMA; }
+undef                   { ADJUST(); return UNDEF; }
+def                     { ADJUST(); return DEF; }
+"("                     { ADJUST(); return LPAREN; }
+")"                     { ADJUST(); return RPAREN; }
+end                     { ADJUST(); return END; }
+return                  { ADJUST(); return RETURN; }
+if                      { ADJUST(); return IF; }
+then                    { ADJUST(); return THEN; }
+elsif                   { ADJUST(); return ELSIF; }
+else                    { ADJUST(); return ELSE; }
+unless                  { ADJUST(); return UNLESS; }
+while                   { ADJUST(); return WHILE; }
+do                      { ADJUST(); return DO; }
+until                   { ADJUST(); return UNTIL; }
+case                    { ADJUST(); return CASE; }
+when                    { ADJUST(); return WHEN; }
+print                   { ADJUST(); return PRINT; }
+"="                     { ADJUST(); return ASSIGN; }
+"+="                    { ADJUST(); return PLUSASSIGN; }
+"-="                    { ADJUST(); return MINUSASSIGN; }
+"*="                    { ADJUST(); return MULASSIGN; }
+"/="                    { ADJUST(); return DIVASSIGN; }
+"&&="                   { ADJUST(); return ANDASSIGN; }
+"||="                   { ADJUST(); return ORASSIGN; }
+"+"                     { ADJUST(); return PLUS; }
+"-"                     { ADJUST(); return MINUS; }
+"*"                     { ADJUST(); return MUL; }
+"/"                     { ADJUST(); return DIV; }
+">"                     { ADJUST(); return GT; }
+">="                    { ADJUST(); return GE; }
+"<"                     { ADJUST(); return LT; }
+"<="                    { ADJUST(); return LE; }
+"=="                    { ADJUST(); return EQ; }
+"!="                    { ADJUST(); return NE; }
+"&&"                    { ADJUST(); return AND; }
+"||"                    { ADJUST(); return OR; }
+"!"                     { ADJUST(); return NOT; }
+\n                      { line_nr++; col_nr=1; return NEWLINE; }
 
 {boolean}               { 
                           if (strcmp(yytext, "true") == 0)
@@ -72,19 +71,22 @@ print                   { return PRINT; }
                           else
                             yylval.boolean = 0;
                           
+                          ADJUST();
                           return BOOLEAN; 
                         }
 {identifier}            {
                           char* s = (char*) malloc(yyleng+1);
                           strcpy(s, yytext);
                           yylval.id = s;
+                          ADJUST();
                           return IDENTIFIER; 
                         }
 {integer}               {
                           yylval.integer = atoi(yytext);
+                          ADJUST();
                           return INTEGER; 
                         }
-{comment}|{whitespace}  { }
+{comment}|{whitespace}  { ADJUST(); }
 
 
 

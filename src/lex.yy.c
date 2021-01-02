@@ -739,8 +739,7 @@ YY_DECL
 	{
 #line 27 "ruby.lex"
 
-
-#line 743 "lex.yy.c"
+#line 742 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -799,214 +798,215 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 29 "ruby.lex"
-{ return SEMICOLON; }
+#line 28 "ruby.lex"
+{ ADJUST(); return SEMICOLON; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 30 "ruby.lex"
-{ return COMMA; }
+#line 29 "ruby.lex"
+{ ADJUST(); return COMMA; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 31 "ruby.lex"
-{ return UNDEF; }
+#line 30 "ruby.lex"
+{ ADJUST(); return UNDEF; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 32 "ruby.lex"
-{ return DEF; }
+#line 31 "ruby.lex"
+{ ADJUST(); return DEF; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 33 "ruby.lex"
-{ return LPAREN; }
+#line 32 "ruby.lex"
+{ ADJUST(); return LPAREN; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 34 "ruby.lex"
-{ return RPAREN; }
+#line 33 "ruby.lex"
+{ ADJUST(); return RPAREN; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 35 "ruby.lex"
-{ return END; }
+#line 34 "ruby.lex"
+{ ADJUST(); return END; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 36 "ruby.lex"
-{ return RETURN; }
+#line 35 "ruby.lex"
+{ ADJUST(); return RETURN; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 37 "ruby.lex"
-{ return IF; }
+#line 36 "ruby.lex"
+{ ADJUST(); return IF; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 38 "ruby.lex"
-{ return THEN; }
+#line 37 "ruby.lex"
+{ ADJUST(); return THEN; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 39 "ruby.lex"
-{ return ELSIF; }
+#line 38 "ruby.lex"
+{ ADJUST(); return ELSIF; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 40 "ruby.lex"
-{ return ELSE; }
+#line 39 "ruby.lex"
+{ ADJUST(); return ELSE; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 41 "ruby.lex"
-{ return UNLESS; }
+#line 40 "ruby.lex"
+{ ADJUST(); return UNLESS; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 42 "ruby.lex"
-{ return WHILE; }
+#line 41 "ruby.lex"
+{ ADJUST(); return WHILE; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 43 "ruby.lex"
-{ return DO; }
+#line 42 "ruby.lex"
+{ ADJUST(); return DO; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 44 "ruby.lex"
-{ return UNTIL; }
+#line 43 "ruby.lex"
+{ ADJUST(); return UNTIL; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 45 "ruby.lex"
-{ return CASE; }
+#line 44 "ruby.lex"
+{ ADJUST(); return CASE; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 46 "ruby.lex"
-{ return WHEN; }
+#line 45 "ruby.lex"
+{ ADJUST(); return WHEN; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 47 "ruby.lex"
-{ return PRINT; }
+#line 46 "ruby.lex"
+{ ADJUST(); return PRINT; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 48 "ruby.lex"
-{ return ASSIGN; }
+#line 47 "ruby.lex"
+{ ADJUST(); return ASSIGN; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 49 "ruby.lex"
-{ return PLUSASSIGN; }
+#line 48 "ruby.lex"
+{ ADJUST(); return PLUSASSIGN; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 50 "ruby.lex"
-{ return MINUSASSIGN; }
+#line 49 "ruby.lex"
+{ ADJUST(); return MINUSASSIGN; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 51 "ruby.lex"
-{ return MULASSIGN; }
+#line 50 "ruby.lex"
+{ ADJUST(); return MULASSIGN; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 52 "ruby.lex"
-{ return DIVASSIGN; }
+#line 51 "ruby.lex"
+{ ADJUST(); return DIVASSIGN; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 53 "ruby.lex"
-{ return ANDASSIGN; }
+#line 52 "ruby.lex"
+{ ADJUST(); return ANDASSIGN; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 54 "ruby.lex"
-{ return ORASSIGN; }
+#line 53 "ruby.lex"
+{ ADJUST(); return ORASSIGN; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 55 "ruby.lex"
-{ return PLUS; }
+#line 54 "ruby.lex"
+{ ADJUST(); return PLUS; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 56 "ruby.lex"
-{ return MINUS; }
+#line 55 "ruby.lex"
+{ ADJUST(); return MINUS; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 57 "ruby.lex"
-{ return MUL; }
+#line 56 "ruby.lex"
+{ ADJUST(); return MUL; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 58 "ruby.lex"
-{ return DIV; }
+#line 57 "ruby.lex"
+{ ADJUST(); return DIV; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 59 "ruby.lex"
-{ return GT; }
+#line 58 "ruby.lex"
+{ ADJUST(); return GT; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 60 "ruby.lex"
-{ return GE; }
+#line 59 "ruby.lex"
+{ ADJUST(); return GE; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 61 "ruby.lex"
-{ return LT; }
+#line 60 "ruby.lex"
+{ ADJUST(); return LT; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 62 "ruby.lex"
-{ return LE; }
+#line 61 "ruby.lex"
+{ ADJUST(); return LE; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 63 "ruby.lex"
-{ return EQ; }
+#line 62 "ruby.lex"
+{ ADJUST(); return EQ; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 64 "ruby.lex"
-{ return NE; }
+#line 63 "ruby.lex"
+{ ADJUST(); return NE; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 65 "ruby.lex"
-{ return AND; }
+#line 64 "ruby.lex"
+{ ADJUST(); return AND; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 66 "ruby.lex"
-{ return OR; }
+#line 65 "ruby.lex"
+{ ADJUST(); return OR; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 67 "ruby.lex"
-{ return NOT; }
+#line 66 "ruby.lex"
+{ ADJUST(); return NOT; }
 	YY_BREAK
 case 40:
 /* rule 40 can match eol */
 YY_RULE_SETUP
-#line 68 "ruby.lex"
-{ line_nr++; col_nr=0; return NEWLINE; }
+#line 67 "ruby.lex"
+{ line_nr++; col_nr=1; return NEWLINE; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 70 "ruby.lex"
+#line 69 "ruby.lex"
 { 
                           if (strcmp(yytext, "true") == 0)
                             yylval.boolean = 1;
                           else
                             yylval.boolean = 0;
                           
+                          ADJUST();
                           return BOOLEAN; 
                         }
 	YY_BREAK
@@ -1017,25 +1017,27 @@ YY_RULE_SETUP
                           char* s = (char*) malloc(yyleng+1);
                           strcpy(s, yytext);
                           yylval.id = s;
+                          ADJUST();
                           return IDENTIFIER; 
                         }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 84 "ruby.lex"
+#line 85 "ruby.lex"
 {
                           yylval.integer = atoi(yytext);
+                          ADJUST();
                           return INTEGER; 
                         }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 88 "ruby.lex"
-{ }
+#line 90 "ruby.lex"
+{ ADJUST(); }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 92 "ruby.lex"
+#line 94 "ruby.lex"
 { /* Errors */
   if (yytext[0] < ' '){ /* non-printable char */
     /*yyerror*/ fprintf(stderr,"illegal character: ^%c",yytext[0] + '@'); 
@@ -1055,10 +1057,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 108 "ruby.lex"
+#line 110 "ruby.lex"
 ECHO;
 	YY_BREAK
-#line 1061 "lex.yy.c"
+#line 1063 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2063,7 +2065,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 108 "ruby.lex"
+#line 110 "ruby.lex"
 
 
 /* Function called by (f)lex when EOF is read. If yywrap returns a

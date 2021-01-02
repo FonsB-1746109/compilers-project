@@ -62,6 +62,8 @@ struct ReturnValue
     bool getBool();
 
     bool equals(ReturnValue rv);
+
+    void print();
 };
 
 struct DefStmt; // forward declaration
@@ -101,7 +103,8 @@ struct Table
 
     void print();
 
-    void remove(string i);
+    void removeVariable(string i);
+    void removeFunction(string i);
 
 private:
     void initTableVectors();

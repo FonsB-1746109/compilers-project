@@ -62,6 +62,22 @@ bool ReturnValue::equals(ReturnValue rv)
     }
 }
 
+void ReturnValue::print()
+{
+    switch (type)
+    {
+    case Types::Integer:
+        cout << integer << endl;
+        break;
+    case Types::Boolean:
+        cout << boolean << endl;
+        break;
+    default:
+        cout << "No value.." << endl;
+        break;
+    }
+}
+
 /* Table functions */
 
 Table::Table()
@@ -88,65 +104,37 @@ void Table::initTableVectors()
 void Table::update(string i, int v) 
 {
     auto it = tableMapTypes->find(i);
-    if (it != tableMapTypes->end()){
-        if (it->second == Types::Integer)
-            tableMapInt->find(i)->second = v;
-        else {
-            cout << "[ Table::update(string,int) ] ID was found but not an int..." << endl;
-            return;
-        }
-    } else {
-        tableMapInt->insert(pair<string, int>(i, v));
-        tableMapTypes->insert(pair<string, Types>(i, Types::Integer));
-    }        
+    if (it != tableMapTypes->end())
+        removeVariable(i);
+    
+    tableMapInt->insert(pair<string, int>(i, v));
+    tableMapTypes->insert(pair<string, Types>(i, Types::Integer));       
 };
 
 void Table::update(string i, bool v) 
 {   
-    //TEMP
-    cout << "Bool insert..." << endl;
-
     auto it = tableMapTypes->find(i);
-    if (it != tableMapTypes->end()){
-        if (it->second == Types::Boolean)
-            tableMapBool->find(i)->second = v;
-        else {
-            cout << "[ Table::update(string,bool) ] ID was found but not a bool..." << endl;
-            exit(-1);
-        }
-    } else {
-        tableMapBool->insert(pair<string, bool>(i, v));
-        tableMapTypes->insert(pair<string, Types>(i, Types::Boolean));
-    }   
-        
+    if (it != tableMapTypes->end())
+        removeVariable(i);
+    
+    tableMapBool->insert(pair<string, bool>(i, v));
+    tableMapTypes->insert(pair<string, Types>(i, Types::Boolean)); 
 };
 
 void Table::update(string i, DefStmt *v)
 {
-    //TEMP
-    cout << "Function insert..." << endl;
-
-    auto it = tableMapTypes->find(i);
-    if (it != tableMapTypes->end()){
-        if (it->second == Types::Function){
-            auto iter = tableMapFunction->find(i);
-            iter->second = v;
-        } else {
-            cout << "[ Table::update(string,DefStmt) ] ID was found but not a function..." << endl;
-            exit(-1);
-        }
+    auto it = tableMapFunction->find(i);
+    if (it != tableMapFunction->end()){
+        auto iter = tableMapFunction->find(i);
+        iter->second = v;
     } else {
-        cout << "Insert in funct" << endl;
         tableMapFunction->insert(pair<string, DefStmt*>(i, v));
-        tableMapTypes->insert(pair<string, Types>(i, Types::Function));
     }   
 }
 
 // Returns ERROR if not in table
 Types Table::getType(string i)
 {
-    cout << "Get type of " << i << endl;
-    print();
     auto it = tableMapTypes->find(i);
     if (it != tableMapTypes->end())
         return it->second;
@@ -156,9 +144,6 @@ Types Table::getType(string i)
 
 int Table::getInt(string i)
 {
-    cout << "Get int of " << i << endl;
-    print();
-
     auto it = tableMapInt->find(i);
     if (it != tableMapInt->end())
         return tableMapInt->find(i)->second;
@@ -174,9 +159,6 @@ int Table::getInt(string i)
 
 bool Table::getBool(string i)
 {
-    cout << "Get bool of " << i << endl;
-    print();
-
     auto it = tableMapBool->find(i);
     if (it != tableMapBool->end())
         return tableMapBool->find(i)->second;
@@ -194,9 +176,6 @@ bool Table::getBool(string i)
 
 DefStmt* Table::getFunct(string i)
 {
-    cout << "Get funtion of " << i << endl;
-    print();
-
     auto it = tableMapFunction->find(i);
     if (it != tableMapFunction->end())
         return tableMapFunction->find(i)->second;
@@ -230,11 +209,15 @@ void Table::print()
         cout << "\t" << it->first << endl;
 }
 
-void Table::remove(string i)
+void Table::removeVariable(string i)
 {
     tableMapTypes->erase(i);
     tableMapInt->erase(i);
     tableMapBool->erase(i);
+}
+
+void Table::removeFunction(string i)
+{
     tableMapFunction->erase(i);
 }
 
@@ -324,7 +307,7 @@ void UndefStmt::print()
 
 void UndefStmt::interp(Table* t)
 {
-    t->remove(identifier);
+    t->removeFunction(identifier);
 }
 
 
@@ -462,14 +445,18 @@ Else::Else(CompStmt *comp)
 
 void Else::print()
 {
-    cout << "Else(" << endl << "\t";
-    compStmt->print();
+    cout << "Else(";
+    if (!isEmpty){
+        cout << endl << "\t";
+        compStmt->print();
+    }
     cout << ")" << endl;
 }
 
 void Else::interp(Table *t)
 {
-    compStmt->interp(t);
+    if (!isEmpty)
+        compStmt->interp(t);
 }
 
 
@@ -493,17 +480,16 @@ void IfStmt::print()
 void IfStmt::interp(Table *t)
 {
     ReturnValue rv = expr->interp(t);
-
     if (rv.getType() != Types::Boolean){
         cout << "[ IfStmt::interp(Table) ] Expression is not a boolean..." << endl;
         exit(-1);
     }
-
     if (rv.getBool())
         compStmt->interp(t);
     else {
-        if (!elsif->interp(t)) // elsif->interp(t) returns true if an elsif is matched 
+        if (!elsif->interp(t)){// elsif->interp(t) returns true if an elsif is matched 
             els->interp(t);
+        }
     }
 }
 
@@ -571,6 +557,7 @@ void WhileStmt::interp(Table *t)
             cout << "[ WhileStmt::interp(Table) ] Expression is not a boolean..." << endl;
             exit(-1);
         }
+        rv = expr->interp(t);
     }
 }
 
@@ -606,6 +593,7 @@ void UntilStmt::interp(Table *t)
             cout << "[ UntillStmt::interp(Table) ] Expression is not a boolean..." << endl;
             exit(-1);
         }
+        rv = expr->interp(t);
     }
 }
 
@@ -926,7 +914,6 @@ void IdExpr::print()
 
 ReturnValue IdExpr::interp(Table *t)
 {
-    cout << "search type of " << identifier << endl;
     Types type = t->getType(identifier);
 
     switch (type)
@@ -936,10 +923,6 @@ ReturnValue IdExpr::interp(Table *t)
         break;
     case Types::Boolean:
         return ReturnValue(t->getBool(identifier));
-        break;
-    case Types::Function:
-        cout << "[ IdExpr::interp(Table) ] var is not a boolean or an integer but a function..." << endl;
-        exit(-1);
         break;
     default:
         cout << "[ IdExpr::interp(Table) ] var is not in table error.." << endl;

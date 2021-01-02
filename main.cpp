@@ -23,8 +23,11 @@ int main(int argc, char* argv[])
     std::cout << "Parsing Error" << std::endl;
     return 1;
   }
-    
+  
+
   Table *t = new Table();
+  
+  std::cout << "::TREE PRINT::" << std::endl;
   tree->print();
   tree->interp(t);
 
