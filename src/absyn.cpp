@@ -290,40 +290,6 @@ CompStmt::~CompStmt()
 }
 
 
-PrintStmt::PrintStmt(Expr e)
-    :expr{e}
-{}
-
-void PrintStmt::print()
-{
-    cout << "PrintStmt(" << endl << "\t";
-    expr->print();
-    cout << ")" << endl;
-}
-
-bool PrintStmt::interp(Table *t)
-{
-    ReturnValue rv;
-    rv = expr->interp(t);
-
-    if (rv.getType() == Types::Integer)
-        cout << rv.getInt() << endl;
-    else{
-        if (rv.getBool())
-            cout << "true" << endl;
-        else 
-            cout << "false" << endl;
-    } 
-
-    return false;
-}
-
-PrintStmt::~PrintStmt()
-{
-    free(expr);
-}
-
-
 UndefStmt::UndefStmt(char* id)
     :identifier{id}
 {
@@ -337,6 +303,12 @@ void UndefStmt::print()
 
 bool UndefStmt::interp(Table* t)
 {
+    // Check if name is not an predefined function
+    if (std::find(PREDEFINEDFUNTIONS.begin(), PREDEFINEDFUNTIONS.end(), identifier) != PREDEFINEDFUNTIONS.end()){
+        cout << "[ RuntimeError ] Cannot undefine '" << identifier << "' method..." << endl;
+        exit(-1);
+    }
+
     t->removeFunction(identifier);
     return false;
 }
@@ -359,6 +331,13 @@ void DefStmt::print()
 
 bool DefStmt::interp(Table* t)
 {
+    // Check if name is not an predefined function
+    if (std::find(PREDEFINEDFUNTIONS.begin(), PREDEFINEDFUNTIONS.end(), identifier) != PREDEFINEDFUNTIONS.end()){
+        cout << "[ RuntimeError ] Cannot override '" << identifier << "' method..." << endl;
+        exit(-1);
+    }
+    
+    
     t->update(identifier, this);
     
     globalTable = t;
@@ -374,8 +353,7 @@ ReturnValue DefStmt::run(Exprs exprs, Table *argTable)
     // check arg list length
     int len = exprs->getLength();
     if (len != argList->getLength()){
-        
-        cout << "[ DefStmt::run(Exprs) ] Function called with wrong amount of args... " << endl;
+        cout << "[ RuntimeError ] Function '" << identifier << "' called with wrong amount of args... " << endl;
         exit(-1);
     }
 
@@ -1133,8 +1111,23 @@ void FunctionExpr::print()
 
 ReturnValue FunctionExpr::interp(Table *t)
 {   
-    DefStmt *f = t->getFunct(identifier);
-    return f->run(exprs, t);
+    // Check if name is not an predefined function
+    if (std::find(PREDEFINEDFUNTIONS.begin(), PREDEFINEDFUNTIONS.end(), identifier) == PREDEFINEDFUNTIONS.end()){
+        // Search in table
+        DefStmt *f = t->getFunct(identifier);
+        return f->run(exprs, t);
+    }
+
+    // Call predefined function
+    if (identifier == "print"){
+        PrintFunction pf;
+        pf.interp(t, exprs);
+
+        return ReturnValue();
+    }
+    
+    return ReturnValue();
+    
 }
 
 FunctionExpr::~FunctionExpr()
@@ -1302,4 +1295,27 @@ vector<string> PairArgList::interp(Table *t)
 PairArgList::~PairArgList()
 {
     free(argList);
+}
+
+/* Predefined functions */
+
+void PrintFunction::interp(Table *t, Exprs e)
+{
+    //check length
+    if (e->getLength() != 1){
+        cout << "[ RuntimeError ] Funtion 'print' called with wrong amount of args... " << endl;
+        exit(-1);
+    }
+
+    vector<ReturnValue> rv;
+    rv = e->interp(t);
+
+    if (rv[0].getType() == Types::Integer)
+        cout << rv[0].getInt() << endl;
+    else{
+        if (rv[0].getBool())
+            cout << "true" << endl;
+        else 
+            cout << "false" << endl;
+    } 
 }

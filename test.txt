@@ -28,7 +28,9 @@ LitExpr(literal)
 ReturnStmt(expr)
 Literal(int)
 LitExpr(literal)
-PrintStmt(expr)
+LastExpr(expr)
+FunctionExpr(id,exprs)
+ExprStmt(expr)
 Literal(int)
 LitExpr(literal)
 ReturnStmt(expr)
@@ -42,7 +44,9 @@ CompStmt(stmt,compstmt)
 DefStmt(id,arglist,compstmt)
 LastArgList(id)
 IdExpr(id)
-PrintStmt(expr)
+LastExpr(expr)
+FunctionExpr(id,exprs)
+ExprStmt(expr)
 CompStmt(stmt) t
 DefStmt(id,arglist,compstmt)
 Literal(int)
@@ -63,7 +67,9 @@ FunctionExpr(id,exprs)
 ExprStmt(expr)
 IdExpr(id)
 IdExpr(id)
-PrintStmt(expr)
+LastExpr(expr)
+FunctionExpr(id,exprs)
+ExprStmt(expr)
 CompStmt(stmt) t
 Elsif()
 Else()
@@ -93,7 +99,9 @@ LitExpr(literal)
 BinOpExpr(expr,==,expr)
 Literal(int)
 LitExpr(literal)
-PrintStmt(expr)
+LastExpr(expr)
+FunctionExpr(id,exprs)
+ExprStmt(expr)
 CompStmt(stmt) t
 Elsif()
 Elsif(expr,compstmt,elsif)
@@ -103,7 +111,9 @@ CompStmt(stmt) t
 CompStmt(stmt,compstmt)
 UntilStmt(expr,compstmt)
 IdExpr(id)
-PrintStmt(expr)
+LastExpr(expr)
+FunctionExpr(id,exprs)
+ExprStmt(expr)
 Literal(int)
 LitExpr(literal)
 AssignOpExpr(id,=,expr)
@@ -119,7 +129,9 @@ IdExpr(id)
 Literal(int)
 LitExpr(literal)
 BinOpExpr(expr,*,expr)
-PrintStmt(expr)
+LastExpr(expr)
+FunctionExpr(id,exprs)
+ExprStmt(expr)
 CompStmt(stmt) t
 Literal(int)
 LitExpr(literal)
@@ -127,7 +139,9 @@ IdExpr(id)
 Literal(int)
 LitExpr(literal)
 BinOpExpr(expr,*,expr)
-PrintStmt(expr)
+LastExpr(expr)
+FunctionExpr(id,exprs)
+ExprStmt(expr)
 CompStmt(stmt) t
 Literal(int)
 LitExpr(literal)
@@ -135,7 +149,9 @@ IdExpr(id)
 Literal(int)
 LitExpr(literal)
 BinOpExpr(expr,*,expr)
-PrintStmt(expr)
+LastExpr(expr)
+FunctionExpr(id,exprs)
+ExprStmt(expr)
 CompStmt(stmt) t
 Literal(int)
 LitExpr(literal)
@@ -143,7 +159,9 @@ IdExpr(id)
 Literal(int)
 LitExpr(literal)
 BinOpExpr(expr,*,expr)
-PrintStmt(expr)
+LastExpr(expr)
+FunctionExpr(id,exprs)
+ExprStmt(expr)
 CompStmt(stmt) t
 Literal(int)
 LitExpr(literal)
@@ -156,7 +174,9 @@ LastExpr(exprs,expr)
 IdExpr(id)
 LastExpr(exprs,expr)
 FunctionExpr(id,exprs)
-PrintStmt(expr)
+LastExpr(expr)
+FunctionExpr(id,exprs)
+ExprStmt(expr)
 CompStmt(stmt) t
 Literal(int)
 LitExpr(literal)
@@ -169,7 +189,9 @@ LastExpr(exprs,expr)
 IdExpr(id)
 LastExpr(exprs,expr)
 FunctionExpr(id,exprs)
-PrintStmt(expr)
+LastExpr(expr)
+FunctionExpr(id,exprs)
+ExprStmt(expr)
 CompStmt(stmt) t
 When()
 When(expr,compstmt,when)
@@ -179,7 +201,9 @@ When(expr,compstmt,when)
 When(expr,compstmt,when)
 Literal(int)
 LitExpr(literal)
-PrintStmt(expr)
+LastExpr(expr)
+FunctionExpr(id,exprs)
+ExprStmt(expr)
 CompStmt(stmt) t
 Else(comstmt)
 CaseStmt(expr,expr,compstmt,when,else)
@@ -192,14 +216,10 @@ CompStmt(stmt,compstmt)
 WhileStmt(expr,compstmt)
 LastExpr()
 FunctionExpr(id,exprs)
-PrintStmt(expr)
-Literal(int)
-LitExpr(literal)
-Literal(int)
-LitExpr(literal)
-BinOpExpr(expr,/,expr)
-AssignOpExpr(id,=,expr)
+LastExpr(expr)
+FunctionExpr(id,exprs)
 ExprStmt(expr)
+UndefStmt(expr)
 CompStmt(stmt)
 CompStmt(stmt,compstmt)
 CompStmt(stmt,compstmt)
@@ -277,9 +297,13 @@ CompStmt(
 )
 )
 ,CompStmt(
-	PrintStmt(
+	ExprStmt(
+	FunctionExpr(print,
+	LastExprs(
 	LitExpr(
 	Literal(99999)
+)
+)
 )
 )
 ,CompStmt(
@@ -304,8 +328,12 @@ CompStmt(
 	LastArgList( "a" )
 ,
 CompStmt(
-	PrintStmt(
+	ExprStmt(
+	FunctionExpr(print,
+	LastExprs(
 	IdExpr( a )
+)
+)
 )
 )
 )
@@ -346,8 +374,12 @@ CompStmt(
 	IdExpr( a )
 ,
 CompStmt(
-	PrintStmt(
+	ExprStmt(
+	FunctionExpr(print,
+	LastExprs(
 	IdExpr( a )
+)
+)
 )
 )
 ,
@@ -407,9 +439,13 @@ LitExpr(
 )
 ,
 CompStmt(
-	PrintStmt(
+	ExprStmt(
+	FunctionExpr(print,
+	LastExprs(
 	LitExpr(
 	Literal(9999999)
+)
+)
 )
 )
 )
@@ -423,8 +459,12 @@ Else()
 )
 )
 ,CompStmt(
-	PrintStmt(
+	ExprStmt(
+	FunctionExpr(print,
+	LastExprs(
 	IdExpr( b )
+)
+)
 )
 ,CompStmt(
 	ExprStmt(
@@ -453,12 +493,16 @@ LitExpr(
 )
 ,
 CompStmt(
-	PrintStmt(
+	ExprStmt(
+	FunctionExpr(print,
+	LastExprs(
 	BinOpExpr(
 	IdExpr( c )
 , [assignop],
 LitExpr(
 	Literal(1)
+)
+)
 )
 )
 )
@@ -470,12 +514,16 @@ When(
 )
 ,
 CompStmt(
-	PrintStmt(
+	ExprStmt(
+	FunctionExpr(print,
+	LastExprs(
 	BinOpExpr(
 	IdExpr( c )
 , [assignop],
 LitExpr(
 	Literal(10)
+)
+)
 )
 )
 )
@@ -487,12 +535,16 @@ When(
 )
 ,
 CompStmt(
-	PrintStmt(
+	ExprStmt(
+	FunctionExpr(print,
+	LastExprs(
 	BinOpExpr(
 	IdExpr( c )
 , [assignop],
 LitExpr(
 	Literal(100)
+)
+)
 )
 )
 )
@@ -504,12 +556,16 @@ When(
 )
 ,
 CompStmt(
-	PrintStmt(
+	ExprStmt(
+	FunctionExpr(print,
+	LastExprs(
 	BinOpExpr(
 	IdExpr( c )
 , [assignop],
 LitExpr(
 	Literal(1000)
+)
+)
 )
 )
 )
@@ -521,7 +577,9 @@ When(
 )
 ,
 CompStmt(
-	PrintStmt(
+	ExprStmt(
+	FunctionExpr(print,
+	LastExprs(
 	FunctionExpr(blub,
 	PairExprs(
 	PairExprs(
@@ -541,6 +599,8 @@ IdExpr( c )
 )
 )
 )
+)
+)
 ,
 When(
 	LitExpr(
@@ -548,7 +608,9 @@ When(
 )
 ,
 CompStmt(
-	PrintStmt(
+	ExprStmt(
+	FunctionExpr(print,
+	LastExprs(
 	FunctionExpr(blub,
 	PairExprs(
 	PairExprs(
@@ -568,6 +630,8 @@ IdExpr( b )
 )
 )
 )
+)
+)
 ,
 When()
 )
@@ -578,9 +642,13 @@ When()
 ,
 Else(
 	CompStmt(
-	PrintStmt(
+	ExprStmt(
+	FunctionExpr(print,
+	LastExprs(
 	LitExpr(
 	Literal(55555)
+)
+)
 )
 )
 )
@@ -598,25 +666,17 @@ Else(
 )
 )
 ,CompStmt(
-	PrintStmt(
+	ExprStmt(
+	FunctionExpr(print,
+	LastExprs(
 	FunctionExpr(ret,
 	LastExprs()
 )
 )
+)
+)
 ,CompStmt(
-	ExprStmt(
-	AssignOpExpr(id=a, [assignop],
-	BinOpExpr(
-	LitExpr(
-	Literal(5)
-)
-, [assignop],
-LitExpr(
-	Literal(0)
-)
-)
-)
-)
+	UNDEF( print )
 )
 )
 )
@@ -645,4 +705,4 @@ true
 123456789
 888
 1
-[ RuntimeError ] Division by zero..
+[ RuntimeError ] Cannot undefine 'print' method...

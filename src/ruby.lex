@@ -42,7 +42,6 @@ do                      { ADJUST(); return DO; }
 until                   { ADJUST(); return UNTIL; }
 case                    { ADJUST(); return CASE; }
 when                    { ADJUST(); return WHEN; }
-print                   { ADJUST(); return PRINT; }
 "="                     { ADJUST(); return ASSIGN; }
 "+="                    { ADJUST(); return PLUSASSIGN; }
 "-="                    { ADJUST(); return MINUSASSIGN; }

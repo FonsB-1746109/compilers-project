@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <map>
 #include <iostream>
 
@@ -185,18 +186,6 @@ struct CompStmt
 };
 
 /* Statement structs */
-
-struct PrintStmt : public Stmt_
-{
-    Expr expr;
-
-    PrintStmt(Expr e);
-
-    void print();
-    bool interp(Table *t);
-
-    ~PrintStmt();
-};
 
 struct UndefStmt : public Stmt_
 {
@@ -556,6 +545,19 @@ struct PairArgList : public ArgList_
 
     ~PairArgList();
 };
+
+/* Predefined functions */
+
+// array with all names of predefined functions for checking
+const vector<string> PREDEFINEDFUNTIONS{
+    "print"
+};
+
+struct PrintFunction
+{
+   void interp(Table *t, Exprs e);
+};
+
 
 #include "absyn.cpp"
 

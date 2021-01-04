@@ -39,7 +39,7 @@ Program *tree;
   PLUS MINUS MUL DIV GT GE LT LE EQ NE
   AND OR NOT
   UNDEF DEF
-  NEWLINE PRINT
+  NEWLINE
 
 %defines
 
@@ -75,9 +75,7 @@ compstmt : stmt
         { $$ = new CompStmt($1, $3); puts("CompStmt(stmt,compstmt)"); }
 ;
 
-stmt : PRINT LPAREN expr RPAREN
-        { $$ = new PrintStmt($3); puts("PrintStmt(expr)"); }
-  | UNDEF IDENTIFIER
+stmt : UNDEF IDENTIFIER
         { $$ = new UndefStmt($2); puts("UndefStmt(expr)"); }
   | DEF IDENTIFIER LPAREN arglist RPAREN optnewline compstmt END
         { $$ = new DefStmt($2, $4, $7); puts("DefStmt(id,arglist,compstmt)"); }

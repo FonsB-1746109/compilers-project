@@ -96,8 +96,7 @@ extern int yydebug;
     UNDEF = 297,                   /* UNDEF  */
     DEF = 298,                     /* DEF  */
     NEWLINE = 299,                 /* NEWLINE  */
-    PRINT = 300,                   /* PRINT  */
-    UMINUS = 301                   /* UMINUS  */
+    UMINUS = 300                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -123,7 +122,7 @@ union YYSTYPE
   Literal *literal;
   ArgList arglist;
 
-#line 127 "ruby.tab.h"
+#line 126 "ruby.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
