@@ -80,6 +80,7 @@ end
 
 print(ret())
 
-a = lol
+aap = true
+a = 1 + aap
 
 ret()

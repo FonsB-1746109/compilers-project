@@ -37,7 +37,7 @@ int ReturnValue::getInt()
     if (type != Types::Integer){
         cout << "[ RuntimeError ] ";
         if (hasID)
-            cout << "Variable " << varID;
+            cout << "Variable '" << varID << "'";
         else
             cout << "Value";
         cout << " is not an integer but integer needed..." << endl;
@@ -404,7 +404,7 @@ ReturnValue DefStmt::run(Exprs exprs, Table *argTable)
 void DefStmt::addReturnValue(ReturnValue rv)
 {
     returnVal = rv;
-
+    returnVal.varID = identifier;
 }
 
 DefStmt::~DefStmt()
@@ -1050,10 +1050,10 @@ ReturnValue IdExpr::interp(Table *t)
     switch (type)
     {
     case Types::Integer:
-        return ReturnValue(t->getInt(identifier));
+        return ReturnValue(t->getInt(identifier), identifier);
         break;
     case Types::Boolean:
-        return ReturnValue(t->getBool(identifier));
+        return ReturnValue(t->getBool(identifier), identifier);
         break;
     default:
         cout << "[ RuntimeError ] Variable '" << identifier << "' not defined.." << endl;

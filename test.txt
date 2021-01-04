@@ -219,13 +219,21 @@ FunctionExpr(id,exprs)
 LastExpr(expr)
 FunctionExpr(id,exprs)
 ExprStmt(expr)
+Literal(bool)
+LitExpr(literal)
+AssignOpExpr(id,=,expr)
+ExprStmt(expr)
+Literal(int)
+LitExpr(literal)
 IdExpr(id)
+BinOpExpr(expr,+,expr)
 AssignOpExpr(id,=,expr)
 ExprStmt(expr)
 LastExpr()
 FunctionExpr(id,exprs)
 ExprStmt(expr)
 CompStmt(stmt)
+CompStmt(stmt,compstmt)
 CompStmt(stmt,compstmt)
 CompStmt(stmt,compstmt)
 CompStmt(stmt,compstmt)
@@ -683,14 +691,29 @@ Else(
 )
 ,CompStmt(
 	ExprStmt(
+	AssignOpExpr(id=aap, [assignop],
+	LitExpr(
+	Literal(1)
+)
+)
+)
+,CompStmt(
+	ExprStmt(
 	AssignOpExpr(id=a, [assignop],
-	IdExpr( lol )
+	BinOpExpr(
+	LitExpr(
+	Literal(1)
+)
+, [assignop],
+IdExpr( aap )
+)
 )
 )
 ,CompStmt(
 	ExprStmt(
 	FunctionExpr(ret,
 	LastExprs()
+)
 )
 )
 )
@@ -722,4 +745,4 @@ true
 123456789
 888
 1
-[ RuntimeError ] Variable 'lol' not defined..
+[ RuntimeError ] Variable 'aap' is not an integer but integer needed...
