@@ -201,8 +201,8 @@ do : t
   | t DO
 ;
 
-t : SEMICOLON
-  | SEMICOLON multnewline
+t : SEMICOLON multnewline
+  | SEMICOLON
   | multnewline
 ;
 

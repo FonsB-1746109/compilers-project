@@ -31,5 +31,15 @@ int main(int argc, char* argv[])
   tree->print();
   tree->interp(t);
 
+  free(t);
+
   return 0;
 }
+
+// TODO
+/*
+- destructors
+- delen door 0
+- eventueel print beter maken (niet in lexer)
+
+*/

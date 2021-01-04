@@ -115,7 +115,7 @@ struct Stmt_
 {
     virtual void print(){};
 
-    virtual void interp(Table *t){};
+    virtual bool interp(Table *t){ return false; };
     virtual ~Stmt_(){};
 };
 
@@ -165,7 +165,7 @@ struct Program
     void print();
     void interp(Table *t);
 
-    ~Program(){};
+    ~Program();
 };
 
 struct CompStmt
@@ -178,9 +178,9 @@ struct CompStmt
     CompStmt(Stmt s, CompStmt *comp);
 
     void print();
-    void interp(Table *t);
+    bool interp(Table *t);
 
-    ~CompStmt(){};
+    ~CompStmt();
 };
 
 /* Statement structs */
@@ -192,9 +192,9 @@ struct PrintStmt : public Stmt_
     PrintStmt(Expr e);
 
     void print();
-    void interp(Table *t);
+    bool interp(Table *t);
 
-    ~PrintStmt(){};
+    ~PrintStmt();
 };
 
 struct UndefStmt : public Stmt_
@@ -204,9 +204,9 @@ struct UndefStmt : public Stmt_
     UndefStmt(char *id);
 
     void print();
-    void interp(Table *t);
+    bool interp(Table *t);
 
-    ~UndefStmt(){};
+    ~UndefStmt();
 };
 
 struct DefStmt : public Stmt_
@@ -224,11 +224,11 @@ struct DefStmt : public Stmt_
     DefStmt(char *id, ArgList argl, CompStmt *comps);
 
     void print();
-    void interp(Table *t);
+    bool interp(Table *t);
     ReturnValue run(Exprs exprs, Table *argTable);
     void addReturnValue(ReturnValue rv);
 
-    ~DefStmt(){};
+    ~DefStmt();
 };
 
 struct ReturnStmt : public Stmt_
@@ -238,12 +238,19 @@ struct ReturnStmt : public Stmt_
     ReturnStmt(Expr e);
 
     void print();
-    void interp(Table *t);
+    bool interp(Table *t);
 
-    ~ReturnStmt(){};
+    ~ReturnStmt();
 };
 
 /* If statement structs */
+
+struct ReturnInfo{
+    bool isMatched;
+    bool hasReturned;
+    ReturnInfo() : isMatched(false), hasReturned(false) {}
+};
+
 struct Elsif
 {
     bool isEmpty;
@@ -255,9 +262,9 @@ struct Elsif
     Elsif(Expr e, CompStmt *comp, Elsif *elif);
 
     void print();
-    bool interp(Table *t);
+    ReturnInfo interp(Table *t);
 
-    ~Elsif(){};
+    ~Elsif();
 };
 
 struct Else
@@ -269,9 +276,9 @@ struct Else
     Else(CompStmt *comp);
 
     void print();
-    void interp(Table *t);
+    bool interp(Table *t);
 
-    ~Else(){};
+    ~Else();
 };
 
 struct IfStmt : public Stmt_
@@ -285,9 +292,9 @@ struct IfStmt : public Stmt_
     IfStmt(Expr e, CompStmt *comp, Elsif *eif, Else *el);
 
     void print();
-    void interp(Table *t);
+    bool interp(Table *t);
 
-    ~IfStmt(){};
+    ~IfStmt();
 };
 
 struct UnlessStmt : public Stmt_
@@ -300,9 +307,9 @@ struct UnlessStmt : public Stmt_
     UnlessStmt(Expr e, CompStmt *comp, Else *el);
 
     void print();
-    void interp(Table *t);
+    bool interp(Table *t);
 
-    ~UnlessStmt(){};
+    ~UnlessStmt();
 };
 
 struct WhileStmt : public Stmt_
@@ -313,9 +320,9 @@ struct WhileStmt : public Stmt_
     WhileStmt(Expr e, CompStmt *comp);
 
     void print();
-    void interp(Table *t);
+    bool interp(Table *t);
 
-    ~WhileStmt(){};
+    ~WhileStmt();
 };
 
 struct UntilStmt : public Stmt_
@@ -326,9 +333,9 @@ struct UntilStmt : public Stmt_
     UntilStmt(Expr e, CompStmt *comp);
 
     void print();
-    void interp(Table *t);
+    bool interp(Table *t);
 
-    ~UntilStmt(){};
+    ~UntilStmt();
 };
 
 struct When
@@ -342,9 +349,9 @@ struct When
     When(Expr e, CompStmt *comp, When *w);
 
     void print();
-    bool interp(Table *t, Expr e);
+    ReturnInfo interp(Table *t, Expr e);
 
-    ~When(){};
+    ~When();
 };
 
 struct CaseStmt : public Stmt_
@@ -359,9 +366,9 @@ struct CaseStmt : public Stmt_
     CaseStmt(Expr ce, Expr we, CompStmt *comp, When *w, Else *el);
 
     void print();
-    void interp(Table *t);
+    bool interp(Table *t);
 
-    ~CaseStmt(){};
+    ~CaseStmt();
 };
 
 struct ExprStmt : public Stmt_
@@ -371,9 +378,9 @@ struct ExprStmt : public Stmt_
     ExprStmt(Expr e);
 
     void print();
-    void interp(Table *t);
+    bool interp(Table *t);
 
-    ~ExprStmt(){};
+    ~ExprStmt();
 };
 
 /* Expression Structs */
@@ -389,7 +396,7 @@ struct AssignOpExpr : public Expr_
     void print();
     ReturnValue interp(Table *t);
 
-    ~AssignOpExpr(){};
+    ~AssignOpExpr();
 };
 
 struct BinOpExpr : public Expr_
@@ -402,7 +409,7 @@ struct BinOpExpr : public Expr_
     void print();
     ReturnValue interp(Table *t);
 
-    ~BinOpExpr(){};
+    ~BinOpExpr();
 };
 
 struct NotExpr : public Expr_
@@ -414,7 +421,7 @@ struct NotExpr : public Expr_
     void print();
     ReturnValue interp(Table *t);
 
-    ~NotExpr(){};
+    ~NotExpr();
 };
 
 struct Literal
@@ -441,7 +448,7 @@ struct LitExpr : public Expr_
     void print();
     ReturnValue interp(Table *t);
 
-    ~LitExpr(){};
+    ~LitExpr();
 };
 
 struct IdExpr : public Expr_
@@ -465,7 +472,7 @@ struct MinExpr : public Expr_
     void print();
     ReturnValue interp(Table *t);
 
-    ~MinExpr(){};
+    ~MinExpr();
 };
 
 struct FunctionExpr : public Expr_
@@ -478,7 +485,7 @@ struct FunctionExpr : public Expr_
     void print();
     ReturnValue interp(Table *t);
 
-    ~FunctionExpr(){};
+    ~FunctionExpr();
 };
 
 struct ErrorExpr : public Expr_
@@ -503,7 +510,7 @@ struct LastExprs : public Exprs_
     int getLength();
     vector<ReturnValue> interp(Table *t);
 
-    ~LastExprs(){};
+    ~LastExprs();
 };
 
 struct PairExprs : public Exprs_
@@ -517,7 +524,7 @@ struct PairExprs : public Exprs_
     int getLength();
     vector<ReturnValue> interp(Table *t);
 
-    ~PairExprs(){};
+    ~PairExprs();
 };
 
 struct LastArgList : public ArgList_
@@ -546,13 +553,10 @@ struct PairArgList : public ArgList_
     int getLength();
     vector<string> interp(Table *t);
 
-    ~PairArgList(){};
+    ~PairArgList();
 };
 
 #include "absyn.cpp"
 
 #endif
-
-//======================================================================
-// CPP FILE TEST
 

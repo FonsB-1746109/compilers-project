@@ -8,6 +8,13 @@ def blub(a, b, c)
     end
 end
 
+def ret()
+    return 1
+    print(99999)
+    return 2
+    return 3
+end
+
 def a(a)
 
 
@@ -17,7 +24,7 @@ def a(a)
 end
 a    =    5
 a(a)
-a = true;
+a = true
 a(a)
 
 if (a)
@@ -52,13 +59,13 @@ while (c<=5)
 
     case c 
         when 0
-            print(c*1) -- print 0
+            print(c*1) # print 0
         when 1
-            print(c*10) -- print 10
+            print(c*10) # print 10
         when 2
-            print(c*100) -- print 200
+            print(c*100) # print 200
         when 3
-            print(c*1000) -- print 3000
+            print(c*1000) # print 3000
         when 4
             print(blub(4,123456789,c)) # print 123456789
         when 5
@@ -67,5 +74,8 @@ while (c<=5)
             print(55555) # gebeurt nooit
     end
 
-    c+=1;
+    c+=1
 end
+
+
+print(ret())

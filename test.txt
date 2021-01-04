@@ -22,6 +22,24 @@ Else(comstmt)
 IfStmt(expr,comptstmt,elsif,else)
 CompStmt(stmt) t
 DefStmt(id,arglist,compstmt)
+LastArgList()
+Literal(int)
+LitExpr(literal)
+ReturnStmt(expr)
+Literal(int)
+LitExpr(literal)
+PrintStmt(expr)
+Literal(int)
+LitExpr(literal)
+ReturnStmt(expr)
+Literal(int)
+LitExpr(literal)
+ReturnStmt(expr)
+CompStmt(stmt) t
+CompStmt(stmt,compstmt)
+CompStmt(stmt,compstmt)
+CompStmt(stmt,compstmt)
+DefStmt(id,arglist,compstmt)
 LastArgList(id)
 IdExpr(id)
 PrintStmt(expr)
@@ -172,7 +190,12 @@ ExprStmt(expr)
 CompStmt(stmt) t
 CompStmt(stmt,compstmt)
 WhileStmt(expr,compstmt)
-CompStmt(stmt) t
+LastExpr()
+FunctionExpr(id,exprs)
+PrintStmt(expr)
+CompStmt(stmt)
+CompStmt(stmt,compstmt)
+CompStmt(stmt,compstmt)
 CompStmt(stmt,compstmt)
 CompStmt(stmt,compstmt)
 CompStmt(stmt,compstmt)
@@ -229,6 +252,39 @@ Else(
 	CompStmt(
 	ReturnStmt(
 	IdExpr( a )
+)
+)
+)
+)
+)
+)
+,CompStmt(
+	DefStmt(id=ret, 
+	LastArgList()
+,
+CompStmt(
+	ReturnStmt(
+	LitExpr(
+	Literal(1)
+)
+)
+,CompStmt(
+	PrintStmt(
+	LitExpr(
+	Literal(99999)
+)
+)
+,CompStmt(
+	ReturnStmt(
+	LitExpr(
+	Literal(2)
+)
+)
+,CompStmt(
+	ReturnStmt(
+	LitExpr(
+	Literal(3)
+)
 )
 )
 )
@@ -533,6 +589,14 @@ Else(
 )
 )
 )
+,CompStmt(
+	PrintStmt(
+	FunctionExpr(ret,
+	LastExprs()
+)
+)
+)
+)
 )
 )
 )
@@ -557,3 +621,4 @@ true
 3000
 123456789
 888
+1
