@@ -80,6 +80,7 @@ struct Table
     map<string, Types> *tableMapTypes;
 
     Table();
+    ~Table();
 
     /* NOT copy constructor, but "backup" table add
         If value isn't in this table, check backup table  
@@ -206,7 +207,7 @@ struct UndefStmt : public Stmt_
     void print();
     bool interp(Table *t);
 
-    ~UndefStmt();
+    ~UndefStmt(){};
 };
 
 struct DefStmt : public Stmt_

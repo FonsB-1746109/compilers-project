@@ -86,6 +86,14 @@ Table::Table()
     initTableVectors();
 }
 
+Table::~Table()
+{
+    free(tableMapInt);
+    free(tableMapBool);
+    free(tableMapFunction);
+    free(tableMapTypes);
+}
+
 Table::Table(Table *t, DefStmt *parent)
     :hasBackup{true}, backupTable(t), parentFunction{parent}
 {
@@ -238,6 +246,11 @@ void Program::interp(Table *t)
     compStmt->interp(t);
 }
 
+Program::~Program()
+{
+    free(compStmt);
+}
+
 
 CompStmt::CompStmt(Stmt s)
     :isArray(false), stmt{s}
@@ -269,6 +282,13 @@ bool CompStmt::interp(Table *t)
     return false;
 }
 
+CompStmt::~CompStmt()
+{
+    free(stmt);
+    if (isArray)
+        free(compStmt);
+}
+
 
 PrintStmt::PrintStmt(Expr e)
     :expr{e}
@@ -296,6 +316,11 @@ bool PrintStmt::interp(Table *t)
     } 
 
     return false;
+}
+
+PrintStmt::~PrintStmt()
+{
+    free(expr);
 }
 
 
@@ -383,6 +408,13 @@ void DefStmt::addReturnValue(ReturnValue rv)
 
 }
 
+DefStmt::~DefStmt()
+{
+    free(argList);
+    free(compStmt);
+}
+
+
 ReturnStmt::ReturnStmt(Expr e)
     :expr{e}
 {}
@@ -404,6 +436,12 @@ bool ReturnStmt::interp(Table *t)
 
     return true;
 }
+
+ReturnStmt::~ReturnStmt()
+{
+    free(expr);
+}
+
 
 Elsif::Elsif()
     :isEmpty(true)
@@ -452,6 +490,16 @@ ReturnInfo Elsif::interp(Table *t)
     }
 }
 
+Elsif::~Elsif()
+{
+    if(!isEmpty){
+        free(expr);
+        free(compStmt);
+        free(elsifTail);
+    }
+}
+
+
 Else::Else()
     :isEmpty{true}
 {}
@@ -476,6 +524,12 @@ bool Else::interp(Table *t)
         return compStmt->interp(t);
     
     return false;
+}
+
+Else::~Else()
+{
+    if(!isEmpty)
+        free(compStmt);
 }
 
 
@@ -514,6 +568,14 @@ bool IfStmt::interp(Table *t)
     }
 }
 
+IfStmt::~IfStmt()
+{
+    free(expr);
+    free(compStmt);
+    free(elsif);
+    free(els);
+}
+
 
 UnlessStmt::UnlessStmt(Expr e, CompStmt *comp, Else *el)
     :expr{e}, compStmt{comp}, els{el}
@@ -546,6 +608,12 @@ bool UnlessStmt::interp(Table *t)
     }
 }
 
+UnlessStmt::~UnlessStmt()
+{
+    free(expr);
+    free(compStmt);
+    free(els);
+}
 
 WhileStmt::WhileStmt(Expr e, CompStmt *comp)
     :expr{e}, compStmt{comp}
@@ -584,6 +652,12 @@ bool WhileStmt::interp(Table *t)
     return false;
 }
 
+WhileStmt::~WhileStmt()
+{
+    free(expr);
+    free(compStmt);
+}
+
 
 UntilStmt::UntilStmt(Expr e, CompStmt *comp)
     :expr{e}, compStmt{comp}
@@ -620,6 +694,12 @@ bool UntilStmt::interp(Table *t)
         rv = expr->interp(t);
     }
     return false;
+}
+
+UntilStmt::~UntilStmt()
+{
+    free(expr);
+    free(compStmt);
 }
 
 
@@ -665,6 +745,15 @@ ReturnInfo When::interp(Table *t, Expr e)
         return whenTail->interp(t, e);    
 }
 
+When::~When()
+{
+    if (!isEmpty){
+        free(whenTail);
+        free(expr);
+        free(compStmt);
+    }
+}
+
 
 CaseStmt::CaseStmt(Expr ce, Expr we, CompStmt *comp, When *w, Else *el)
     :caseExpr{ce}, whenExpr{we}, compStmt{comp}, when{w}, els{el}
@@ -700,6 +789,14 @@ bool CaseStmt::interp(Table *t)
     }
 }
 
+CaseStmt::~CaseStmt()
+{
+    free(caseExpr);
+    free(whenExpr);
+    free(compStmt);
+    free(when);
+    free(els);
+}
 
 ExprStmt::ExprStmt(Expr e)
     :expr{e}
@@ -716,6 +813,11 @@ bool ExprStmt::interp(Table *t)
 {
     expr->interp(t);
     return false;
+}
+
+ExprStmt::~ExprStmt()
+{
+    free(expr);
 }
 
 
@@ -773,6 +875,10 @@ ReturnValue AssignOpExpr::interp(Table* t)
             resultInt = idvInt * rv.getInt();
             break;
         case Assignop::DivAssign:
+            if (rv.getInt() == 0){
+                cout << "[ RuntimeError ] Division by zero.." << endl;
+                exit(-1);
+            }
             resultInt = idvInt / rv.getInt();
             break;
         default:
@@ -812,6 +918,12 @@ ReturnValue AssignOpExpr::interp(Table* t)
     }
 }
 
+AssignOpExpr::~AssignOpExpr()
+{
+    free(expr);
+}
+
+
 BinOpExpr::BinOpExpr(Expr eL, Binop bop, Expr eR)
     :exprL{eL}, binop{bop}, exprR{eR}
 {}
@@ -842,6 +954,10 @@ ReturnValue BinOpExpr::interp(Table *t)
         return ReturnValue(rvL.getInt() * rvR.getInt());
         break;
     case Binop::Div:
+        if (rvR.getInt() == 0){
+            cout << "[ RuntimeError ] Division by zero.." << endl;
+            exit(-1);
+        }
         return ReturnValue(rvL.getInt() / rvR.getInt());
         break;
     case Binop::Gt:
@@ -873,6 +989,12 @@ ReturnValue BinOpExpr::interp(Table *t)
     }
 }
 
+BinOpExpr::~BinOpExpr()
+{
+    free(exprL);
+    free(exprR);
+}
+
 
 NotExpr::NotExpr(Expr e)
     :expr{e}
@@ -888,6 +1010,11 @@ void NotExpr::print()
 ReturnValue NotExpr::interp(Table *t)
 {
     return ReturnValue(!expr->interp(t).getBool());
+}
+
+NotExpr::~NotExpr()
+{
+    free(expr);
 }
 
 
@@ -930,6 +1057,11 @@ void LitExpr::print()
 ReturnValue LitExpr::interp(Table *t)
 {
     return lit->interp(t);
+}
+
+LitExpr::~LitExpr()
+{
+    free(lit);
 }
 
 
@@ -980,6 +1112,11 @@ ReturnValue MinExpr::interp(Table *t)
     return ReturnValue(expr->interp(t).getInt() * (-1));
 }
 
+MinExpr::~MinExpr()
+{
+    free(expr);
+}
+
 
 FunctionExpr::FunctionExpr(char* id, Exprs e)
     :identifier{id}, exprs{e}
@@ -998,6 +1135,11 @@ ReturnValue FunctionExpr::interp(Table *t)
 {   
     DefStmt *f = t->getFunct(identifier);
     return f->run(exprs, t);
+}
+
+FunctionExpr::~FunctionExpr()
+{
+    free(exprs);
 }
 
 
@@ -1052,6 +1194,12 @@ vector<ReturnValue> LastExprs::interp(Table *t)
     return values;
 }
 
+LastExprs::~LastExprs()
+{
+    if (!isEmpty)
+        free(expr);
+}
+
 
 PairExprs::PairExprs(Exprs exs, Expr e)
     :exprs{exs}, expr{e}
@@ -1077,6 +1225,12 @@ vector<ReturnValue> PairExprs::interp(Table *t)
     values.push_back(expr->interp(t));
 
     return values;
+}
+
+PairExprs::~PairExprs()
+{
+    free(expr);
+    free(exprs);
 }
 
 
@@ -1143,4 +1297,9 @@ vector<string> PairArgList::interp(Table *t)
     ids.push_back(identifier);
 
     return ids;
+}
+
+PairArgList::~PairArgList()
+{
+    free(argList);
 }

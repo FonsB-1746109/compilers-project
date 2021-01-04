@@ -193,7 +193,15 @@ WhileStmt(expr,compstmt)
 LastExpr()
 FunctionExpr(id,exprs)
 PrintStmt(expr)
+Literal(int)
+LitExpr(literal)
+Literal(int)
+LitExpr(literal)
+BinOpExpr(expr,/,expr)
+AssignOpExpr(id,=,expr)
+ExprStmt(expr)
 CompStmt(stmt)
+CompStmt(stmt,compstmt)
 CompStmt(stmt,compstmt)
 CompStmt(stmt,compstmt)
 CompStmt(stmt,compstmt)
@@ -595,6 +603,21 @@ Else(
 	LastExprs()
 )
 )
+,CompStmt(
+	ExprStmt(
+	AssignOpExpr(id=a, [assignop],
+	BinOpExpr(
+	LitExpr(
+	Literal(5)
+)
+, [assignop],
+LitExpr(
+	Literal(0)
+)
+)
+)
+)
+)
 )
 )
 )
@@ -622,3 +645,4 @@ true
 123456789
 888
 1
+[ RuntimeError ] Division by zero..

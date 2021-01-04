@@ -38,8 +38,6 @@ int main(int argc, char* argv[])
 
 // TODO
 /*
-- destructors
-- delen door 0
 - eventueel print beter maken (niet in lexer)
 
 */
