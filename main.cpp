@@ -27,8 +27,8 @@ int main(int argc, char* argv[])
 
   Table *t = new Table();
   
-  //std::cout << "::TREE PRINT::" << std::endl;
-  //tree->print();
+  std::cout << "===== TREE PRINT =====" << std::endl;
+  tree->print();
   std::cout << endl << "===== OUTPUT =====" << std::endl;
   tree->interp(t);
 
@@ -36,8 +36,3 @@ int main(int argc, char* argv[])
 
   return 0;
 }
-
-// TODO
-/*
-
-*/
