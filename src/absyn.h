@@ -77,7 +77,7 @@ struct Table
 {
     bool hasBackup;
     Table *backupTable;
-    DefStmt *parentFunction;
+    ReturnValue returnVal;
 
     map<string, int> *tableMapInt;
     map<string, bool> *tableMapBool;
@@ -91,7 +91,7 @@ struct Table
     /* NOT copy constructor, but "backup" table add
         If value isn't in this table, check backup table  
     */
-    Table(Table *t, DefStmt *parent);
+    Table(Table *t);
 
     // Update for integers
     void update(string i, int v);
@@ -212,8 +212,6 @@ struct DefStmt : public Stmt_
 
     ReturnValue returnVal;
 
-    // local table == glob + all locals
-    Table *localTable;
     Table *globalTable;
 
     DefStmt(char *id, ArgList argl, CompStmt *comps);

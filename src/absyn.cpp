@@ -121,8 +121,8 @@ Table::~Table()
     free(tableMapTypes);
 }
 
-Table::Table(Table *t, DefStmt *parent)
-    :hasBackup{true}, backupTable(t), parentFunction{parent}
+Table::Table(Table *t)
+    :hasBackup{true}, backupTable(t)
 {
     initTableVectors();
 }
@@ -363,14 +363,14 @@ bool DefStmt::interp(Table* t)
     
     globalTable = t;
 
-    // Local table has the global as backup
-    localTable = new Table(t, this);
-
     return false;
 }
 
 ReturnValue DefStmt::run(Exprs exprs, Table *argTable)
 {
+    // Local table has the global as backup
+    Table *localTable = new Table(globalTable);
+    
     // check arg list length
     int len = exprs->getLength();
     if (len != argList->getLength()){
@@ -397,8 +397,9 @@ ReturnValue DefStmt::run(Exprs exprs, Table *argTable)
     }
 
     compStmt->interp(localTable);  
-
-    return returnVal;
+    ReturnValue rv = localTable->returnVal;
+    free(localTable);
+    return rv;
 }
 
 void DefStmt::addReturnValue(ReturnValue rv)
@@ -431,7 +432,7 @@ bool ReturnStmt::interp(Table *t)
         cout << "[ ReturnStmt ] Cannot return outside a function..." << endl;
         exit(-1); 
     }
-    t->parentFunction->addReturnValue(expr->interp(t));
+    t->returnVal = expr->interp(t);
 
     return true;
 }
