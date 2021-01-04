@@ -79,3 +79,7 @@ end
 
 
 print(ret())
+
+a = lol
+
+ret()

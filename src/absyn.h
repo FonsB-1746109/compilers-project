@@ -53,14 +53,19 @@ struct ReturnValue
     int integer;
     bool boolean;
     Types type;
+    bool hasID;
+    string varID;
 
     ReturnValue(); // for init purpose
     ReturnValue(int v);
+    ReturnValue(int v, string id);
     ReturnValue(bool v);
+    ReturnValue(bool v, string id);
 
     Types getType();
     int getInt();
     bool getBool();
+    string getID();
 
     bool equals(ReturnValue rv);
 

@@ -6,16 +6,25 @@
 /* ReturnValue functions */
 
 ReturnValue::ReturnValue()
+    :hasID{false}
 {
     type = Types::ERROR;  // garbage
 }
 
 ReturnValue::ReturnValue(int v)
-    :integer{v}, type{Types::Integer}
+    :integer{v}, type{Types::Integer}, hasID{false}
+{}
+
+ReturnValue::ReturnValue(int v, string id)
+    :integer{v}, type{Types::Integer}, varID{id}, hasID{true}
 {}
 
 ReturnValue::ReturnValue(bool v)
-    :boolean{v}, type{Types::Boolean}
+    :boolean{v}, type{Types::Boolean}, hasID{false}
+{}
+
+ReturnValue::ReturnValue(bool v, string id)
+    :boolean{v}, type{Types::Boolean}, varID{id}, hasID{true}
 {}
 
 Types ReturnValue::getType()
@@ -26,7 +35,12 @@ Types ReturnValue::getType()
 int ReturnValue::getInt()
 {
     if (type != Types::Integer){
-        cout << "[ ReturnValue::getInt() ] Return value is not an int..." << endl;
+        cout << "[ RuntimeError ] ";
+        if (hasID)
+            cout << "Variable " << varID;
+        else
+            cout << "Value";
+        cout << " is not an integer but integer needed..." << endl;
         exit(-1);
     }
         
@@ -36,12 +50,26 @@ int ReturnValue::getInt()
 bool ReturnValue::getBool()
 {
     if (type != Types::Boolean){
-        cout << "[ ReturnValue::getBool() ] Return value is not a bool..." << endl;
+        cout << "[ RuntimeError ] ";
+        if (hasID)
+            cout << "Variable '" << varID << "'";
+        else
+            cout << "Value";
+        cout << " is not a boolean but boolean needed..." << endl;
         exit(-1);
     }
 
     return boolean;
 }
+
+string ReturnValue::getID()
+{
+    if (hasID)
+        return varID;
+
+    return "";
+}
+
 
 bool ReturnValue::equals(ReturnValue rv)
 {
@@ -73,7 +101,6 @@ void ReturnValue::print()
         cout << boolean << endl;
         break;
     default:
-        cout << "No value.." << endl;
         break;
     }
 }
@@ -155,13 +182,11 @@ int Table::getInt(string i)
     auto it = tableMapInt->find(i);
     if (it != tableMapInt->end())
         return tableMapInt->find(i)->second;
-    else 
-        cout << "[ Table::getInt() ] Int not found in table..." << endl;
-    
-    if (hasBackup){
-        cout << "[ Table::getInt() ] Checking backup..." << endl;
+        
+    if (hasBackup)
         return backupTable->getInt(i);
-    }
+    
+    cout << "[ RuntimeError ] Variable '" << i << "' not defined or not declared as integer..." << endl;
     exit(-1);    
 }
 
@@ -170,14 +195,11 @@ bool Table::getBool(string i)
     auto it = tableMapBool->find(i);
     if (it != tableMapBool->end())
         return tableMapBool->find(i)->second;
-    else 
-        cout << "[ Table::getBool() ] Bool not found in table..." << endl;
     
-    if (hasBackup){
-        cout << "[ Table::getBool() ] Checking backup..." << endl;
+    if (hasBackup)
         return backupTable->getBool(i);
-    }
 
+    cout << "[ RuntimeError ] Variable '" << i << "' not defined or not declared as boolean..." << endl;
     exit(-1);
 
 }
@@ -188,11 +210,10 @@ DefStmt* Table::getFunct(string i)
     if (it != tableMapFunction->end())
         return tableMapFunction->find(i)->second;
 
-    if (hasBackup){
+    if (hasBackup)
         return backupTable->getFunct(i);
-    }
 
-    cout << "[ Table::getFunct() ] Function is not defined..." << endl;
+    cout << "[ RuntimeError ] Function '" << i << "' not defined..." << endl;
     exit(-1);
 }
 
@@ -454,11 +475,6 @@ ReturnInfo Elsif::interp(Table *t)
 
     ReturnValue rv = expr->interp(t);
 
-    if (rv.getType() != Types::Boolean){
-        cout << "[ Elsif::interp(Table) ] Expression is not a boolean..." << endl;
-        exit(-1);
-    }
-
     if (rv.getBool()){
         ri.hasReturned = compStmt->interp(t);
         ri.isMatched = true;
@@ -531,10 +547,7 @@ void IfStmt::print()
 bool IfStmt::interp(Table *t)
 {
     ReturnValue rv = expr->interp(t);
-    if (rv.getType() != Types::Boolean){
-        cout << "[ IfStmt::interp(Table) ] Expression is not a boolean..." << endl;
-        exit(-1);
-    }
+
     if (rv.getBool())
         return compStmt->interp(t);
     else {
@@ -574,11 +587,6 @@ bool UnlessStmt::interp(Table *t)
 {
     ReturnValue rv = expr->interp(t);
 
-    if (rv.getType() != Types::Boolean){
-        cout << "[ UnlessStmt::interp(Table) ] Expression is not a boolean..." << endl;
-        exit(-1);
-    }
-
     if (!rv.getBool())
         return compStmt->interp(t);
     else {
@@ -610,21 +618,12 @@ bool WhileStmt::interp(Table *t)
 {
     ReturnValue rv = expr->interp(t);
 
-    if (rv.getType() != Types::Boolean){
-        cout << "[ WhileStmt::interp(Table) ] Expression is not a boolean..." << endl;
-        exit(-1);
-    }
 
     while (rv.getBool())
     {
         if (compStmt->interp(t))
             return true;
 
-        // Again check type
-        if (rv.getType() != Types::Boolean){
-            cout << "[ WhileStmt::interp(Table) ] Expression is not a boolean..." << endl;
-            exit(-1);
-        }
         rv = expr->interp(t);
     }
     return false;
@@ -654,21 +653,11 @@ bool UntilStmt::interp(Table *t)
 {
     ReturnValue rv = expr->interp(t);
 
-    if (rv.getType() != Types::Boolean){
-        cout << "[ UntillStmt::interp(Table) ] Expression is not a boolean..." << endl;
-        exit(-1);
-    }
-
     while (!rv.getBool())
     {
         if (compStmt->interp(t))
             return true;
 
-        // Again check type
-        if (rv.getType() != Types::Boolean){
-            cout << "[ UntillStmt::interp(Table) ] Expression is not a boolean..." << endl;
-            exit(-1);
-        }
         rv = expr->interp(t);
     }
     return false;
@@ -1067,7 +1056,7 @@ ReturnValue IdExpr::interp(Table *t)
         return ReturnValue(t->getBool(identifier));
         break;
     default:
-        cout << "[ IdExpr::interp(Table) ] " << identifier << " not defined.." << endl;
+        cout << "[ RuntimeError ] Variable '" << identifier << "' not defined.." << endl;
         exit(-1);
         break;
     }

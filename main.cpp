@@ -38,6 +38,5 @@ int main(int argc, char* argv[])
 
 // TODO
 /*
-- eventueel print beter maken (niet in lexer)
 
 */
