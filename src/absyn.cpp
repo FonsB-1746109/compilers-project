@@ -882,6 +882,7 @@ ReturnValue AssignOpExpr::interp(Table* t)
         break;
     }
     default:
+        return ReturnValue(); //garbage
         break;
     }
 }
@@ -953,6 +954,7 @@ ReturnValue BinOpExpr::interp(Table *t)
         return ReturnValue(rvL.getBool() || rvR.getBool());
         break; 
     default:
+        return ReturnValue(); //garbage
         break;
     }
 }

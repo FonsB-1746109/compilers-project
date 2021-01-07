@@ -10,7 +10,7 @@ end
 
 def ret()
     return 1
-    print(99999)
+    print(987654)
     return 2
     return 3
 end
@@ -79,8 +79,3 @@ end
 
 
 print(ret())
-
-aap = true
-a = 1 + aap
-
-ret()
